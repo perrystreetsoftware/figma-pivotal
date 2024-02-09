@@ -1,0 +1,26 @@
+{
+  "name": "Figma-Pivotal",
+  "id": "1336799490097842881",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": [
+    "figjam"
+  ],
+  "networkAccess": {
+    "allowedDomains": [
+      "https://www.pivotaltracker.com"
+    ],
+    "reasoning": "We need to access Pivotal Tracker to fetch the stories and epics"
+  },
+  "parameters": [{
+    "name": "Pivotal API Token",
+    "key": "pivotalToken",
+    "allowFreeform": true
+  }, {
+    "name": "Pivotal Epic ID",
+    "key": "pivotalEpicId",
+    "allowFreeform": true
+  }]
+}
