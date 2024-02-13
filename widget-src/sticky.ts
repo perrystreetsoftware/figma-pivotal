@@ -1,81 +1,48 @@
-import { fontInterBold, fontInterItalic } from "./fonts";
+export default class Sticky {
+  sticky: StickyNode;
+  stickyFormatting: Format[];
 
-const { figJamBaseLight, figJamBase } = figma.constants.colors;
-
-function msToDuration(ms: number) {
-  const seconds = +(ms / 1000).toFixed(1),
-    minutes = +(ms / (1000 * 60)).toFixed(1),
-    hours = +(ms / (1000 * 60 * 60)).toFixed(1),
-    days = +(ms / (1000 * 60 * 60 * 24)).toFixed(1);
-
-  if (seconds < 60) return `${seconds} secs`;
-  else if (minutes < 60) return `${minutes} mins`;
-  else if (hours < 24) return `${hours} hrs`;
-  else return `${days} Days`
-}
-
-function setFontFor(text: TextSublayerNode, searchString: string, startBuffer: number, endBuffer: number, font: FontName = fontInterBold) {
-  const startIndex = text.characters.indexOf(searchString);
-  if (startIndex === -1) return;
-
-  text.setRangeFontName(startIndex + startBuffer, startIndex + searchString.length + endBuffer, font);
-}
-
-const storyTypeEmoji: { [key in PivotalStoryType]: string } = {
-  feature: "⭐️",
-  bug: "🐞",
-  chore: "⚙️",
-  release: "🚀",
-};
-
-const storyTypeColor: { [key in PivotalStoryType]: SolidPaint } = {
-  feature: figma.util.solidPaint(figJamBaseLight.lightYellow),
-  bug: figma.util.solidPaint(figJamBaseLight.lightRed),
-  chore: figma.util.solidPaint(figJamBaseLight.lightGray),
-  release: figma.util.solidPaint(figJamBaseLight.lightBlue),
-};
-
-const headers = {
-  estimate: "- Estimate: ",
-  working: "- In Working: ",
-  delivering: "- In Delivering: ",
-  accepting: "- In Acceptance: ",
-  rejecting: "- In Rejection: "
-}
-
-export function createSticky(story: PivotalStory): StickyNode {
-  const sticky = figma.createSticky();
-
-  sticky.text.characters = `${storyTypeEmoji[story.story_type]} ${story.name}\n\n`;
-  if (story.story_type === "feature") {
-    sticky.text.characters += `${headers.estimate}${story.estimate}\n`;
-  }
-  sticky.text.characters += `${headers.working}${msToDuration(story.cycle_time_details.started_time)}\n`;
-  if (story.story_type !== "chore") {
-    sticky.text.characters += `${headers.delivering}${msToDuration(story.cycle_time_details.finished_time)}\n`;
-    sticky.text.characters += `${headers.accepting}${msToDuration(story.cycle_time_details.delivered_time)}\n`;
-  }
-  if (story.cycle_time_details.rejected_count > 0) {
-    sticky.text.characters += `${headers.rejecting}${msToDuration(story.cycle_time_details.rejected_time)}\n`;
-  }
-  if (story.labels.length > 0) {
-    sticky.text.characters += "\n";
-    sticky.text.characters += story.labels.map(({name}) => name).join(", ");
+  constructor() {
+    this.sticky = figma.createSticky();
+    this.stickyFormatting = [];
   }
 
-  const startTitle = storyTypeEmoji[story.story_type].length + 1;
-  sticky.text.setRangeHyperlink(startTitle, startTitle + story.name.length, {type: "URL", value: story.url});
-  setFontFor(sticky.text, story.name, 0, 0);
-  Object.values(headers).forEach(searchString => setFontFor(sticky.text, searchString, 2, -1, fontInterItalic));
-  story.labels.forEach(label => {
-    const startLabel = sticky.text.characters.indexOf(label.name);
-    sticky.text.setRangeFills(startLabel, startLabel + label.name.length, [figma.util.solidPaint(figJamBase.green)]);
-    sticky.text.setRangeFontSize(startLabel, startLabel + label.name.length, 10);
-  });
-  // sticky.text.getStyledTextSegments(["fontName", "hyperlink"]).forEach(console.log);
+  text(string: string) {
+    this.sticky.text.characters += string;
+  }
 
-  sticky.fills = [storyTypeColor[story.story_type]];
-  sticky.setPluginData("pivotalStory", JSON.stringify(story));
+  textWithFormatting(callbackOrString: Function | string, format: Format["format"]) {
+    const start = this.sticky.text.characters.length;
+    typeof callbackOrString == "function" ? callbackOrString() : this.sticky.text.characters += callbackOrString;
+    const end = this.sticky.text.characters.length;
+    this.stickyFormatting.push({start, end, format});
+  }
 
-  return sticky;
+  applyFormatting() {
+    this.stickyFormatting.forEach(({start, end, format}) => {
+      if (format.url) this.sticky.text.setRangeHyperlink(start, end, {type: "URL", value: format.url});
+      if (format.fontName) this.sticky.text.setRangeFontName(start, end, format.fontName);
+      if (format.fill) this.sticky.text.setRangeFills(start, end, [format.fill]);
+      if (format.fontSize) this.sticky.text.setRangeFontSize(start, end, format.fontSize);
+      if (format.listType) this.sticky.text.setRangeListOptions(start, end, { type: format.listType });
+      if (format.lineHeight) this.sticky.text.setRangeLineHeight(start, end, { unit: "PIXELS", value: format.lineHeight });
+    });
+    // this.sticky.text.getStyledTextSegments(["fontName", "hyperlink"]).forEach(console.log);
+  }
+
+  fills(fills: SolidPaint) {
+    this.sticky.fills = [fills];
+  }
+
+  setPluginData(key: string, value: string) {
+    this.sticky.setPluginData(key, value);
+  }
+
+  authorVisible(visible: boolean) {
+    this.sticky.authorVisible = visible;
+  }
+
+  getNode() {
+    return this.sticky;
+  }
 }

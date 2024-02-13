@@ -41,3 +41,16 @@ declare type PivotalEpic = {
   project_id: number,
   label: PivotalLabel
 }
+
+declare type Format = {
+  start: number;
+  end: number;
+  format: {
+    fontName?: FontName;
+    fill?: SolidPaint;
+    fontSize?: number;
+    url?: string;
+    listType?: "ORDERED" | "UNORDERED";
+    lineHeight?: number;
+  }
+}

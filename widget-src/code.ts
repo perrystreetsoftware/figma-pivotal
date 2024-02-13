@@ -1,5 +1,5 @@
 import { fetchStoriesByEpic } from "./pivotal";
-import { createSticky } from "./sticky";
+import { pivotalSticky } from "./pivotalSticky";
 import { createFrame, transferStickiesToSections } from "./frame";
 import { groupBy, getWeek } from "./sort";
 import { loadAllFonts } from "./fonts";
@@ -24,7 +24,7 @@ figma.on("run", async ({ parameters }: RunEvent) => {
   storiesByAcceptedAtWeek.forEach((stories, week) => {
     const weekFrame = createFrame("VERTICAL");
     weekFrame.name = week;
-    stories.forEach(story => weekFrame.appendChild(createSticky(story)));
+    stories.forEach(story => weekFrame.appendChild(pivotalSticky(story)));
     parentFrame.appendChild(weekFrame);
   });
 
