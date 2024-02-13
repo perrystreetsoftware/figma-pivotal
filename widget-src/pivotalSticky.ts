@@ -2,6 +2,7 @@ import { fontInterBold, fontInterItalic } from "./fonts";
 import Sticky from "./sticky";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
+
 const releaseLinkRegex = / \*\*\[(Android|iOS): \d+\]\(.+\)\*\*/;
 
 const storyTypeEmoji: { [key in PivotalStoryType]: string } = {
@@ -11,11 +12,11 @@ const storyTypeEmoji: { [key in PivotalStoryType]: string } = {
   release: "🚀",
 };
 
-const storyTypeColor: { [key in PivotalStoryType]: SolidPaint } = {
-  feature: figma.util.solidPaint(figJamBaseLight.lightYellow),
-  bug: figma.util.solidPaint(figJamBaseLight.lightRed),
-  chore: figma.util.solidPaint(figJamBaseLight.lightGray),
-  release: figma.util.solidPaint(figJamBaseLight.lightBlue),
+const storyTypeColor: { [key in PivotalStoryType]: string } = {
+  feature: figJamBaseLight.lightYellow,
+  bug: figJamBaseLight.lightRed,
+  chore: figJamBaseLight.lightGray,
+  release: figJamBaseLight.lightBlue,
 };
 
 const cycleTimeHeaders: { [key in keyof PivotalCycleTimeDetails]: string } = {
@@ -35,6 +36,7 @@ const timeToMs = {
 }
 
 const cycleTimeBufferHrs = 12;
+
 const cycleTimeThresholds: { [key: string]: {[key: number]: number} } = {
   feature: [0, 1, 2, 3, 5, 8, 13].reduce<{[key: number]: number}>((memo, i) => (memo[i] = ((i * 24) + cycleTimeBufferHrs) * timeToMs.hours, memo), {}),
   bug: { 0: (48 + cycleTimeBufferHrs) * timeToMs.hours},
@@ -54,16 +56,16 @@ function msToDuration(ms: number) {
   else return `${days} Days`
 }
 
-function cycleTimeThresholdColor(story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails): SolidPaint {
+function cycleTimeThresholdColor(story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails): string {
   if (cycleTimeKey === "started_time") {
     if (story.cycle_time_details[cycleTimeKey] >= cycleTimeThresholds[story.story_type][story.estimate || 0]) {
-      return figma.util.solidPaint(figJamBase.red);
+      return figJamBase.red;
     }
   } else if (story.cycle_time_details[cycleTimeKey] >= timeToMs.days) {
-    return figma.util.solidPaint(figJamBase.red);
+    return figJamBase.red;
   }
 
-  return figma.util.solidPaint(figJamBase.black);
+  return figJamBase.black;
 }
 
 function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails) {
@@ -88,23 +90,20 @@ export function pivotalSticky(story: PivotalStory): StickyNode {
     }, {listType: "UNORDERED"});
   }
 
-  cycleTimeDetails(sticky, story, "started_time");
-  cycleTimeDetails(sticky, story, "finished_time");
-  cycleTimeDetails(sticky, story, "delivered_time");
-  cycleTimeDetails(sticky, story, "rejected_time");
+  const cycleTimesToDisplay: (keyof PivotalCycleTimeDetails)[] = ["started_time", "finished_time", "delivered_time", "rejected_time"];
+  cycleTimesToDisplay.forEach(cycleTimeKey => cycleTimeDetails(sticky, story, cycleTimeKey));
 
   if (story.labels.length > 0) {
     sticky.textWithFormatting(() => {
       sticky.text("\n| ");
-      story.labels.forEach(label => {
-        sticky.textWithFormatting(label.name, {fill: figma.util.solidPaint(figJamBase.green)});
+      story.labels.forEach(({name}) => {
+        sticky.textWithFormatting(name, {fill: figJamBase.green});
         sticky.text(" | ");
       });
     }, {lineHeight: 15, fontSize: 10});
   }
 
-  sticky.applyFormatting();
-  sticky.fills(storyTypeColor[story.story_type]);
+  sticky.fill(storyTypeColor[story.story_type]);
   sticky.setPluginData("pivotalStory", JSON.stringify(story));
   sticky.authorVisible(false);
 

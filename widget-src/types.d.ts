@@ -47,7 +47,7 @@ declare type Format = {
   end: number;
   format: {
     fontName?: FontName;
-    fill?: SolidPaint;
+    fill?: string;
     fontSize?: number;
     url?: string;
     listType?: "ORDERED" | "UNORDERED";
