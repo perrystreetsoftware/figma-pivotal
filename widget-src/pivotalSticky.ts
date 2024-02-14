@@ -1,3 +1,4 @@
+import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
 import { fontInterBold, fontInterItalic } from "./fonts";
 import Sticky from "./sticky";
 
@@ -20,40 +21,28 @@ const storyTypeColor: { [key in PivotalStoryType]: string } = {
 };
 
 const cycleTimeHeaders: { [key in keyof PivotalCycleTimeDetails]: string } = {
-  started_time: "Working",
-  finished_time: "Delivering",
-  delivered_time: "Acceptance",
-  rejected_time: "Rejection",
+  started_time: "Work",
+  finished_time: "Deliver",
+  delivered_time: "Accept",
+  rejected_time: "Reject",
   total_cycle_time: "Total",
   rejected_count: "Rejected #"
 };
 
-const timeToMs = {
-  seconds: 1000,
-  minutes: 1000 * 60,
-  hours: 1000 * 60 * 60,
-  days: 1000 * 60 * 60 * 24
-}
-
 const cycleTimeBufferHrs = 12;
 
 const cycleTimeThresholds: { [key: string]: {[key: number]: number} } = {
-  feature: [0, 1, 2, 3, 5, 8, 13].reduce<{[key: number]: number}>((memo, i) => (memo[i] = ((i * 24) + cycleTimeBufferHrs) * timeToMs.hours, memo), {}),
-  bug: { 0: (48 + cycleTimeBufferHrs) * timeToMs.hours},
-  chore: { 0: (24 + cycleTimeBufferHrs) * timeToMs.hours},
-  release: { 0: (24 + cycleTimeBufferHrs) * timeToMs.hours},
+  feature: [0, 1, 2, 3, 5, 8, 13].reduce<{[key: number]: number}>((memo, i) => (memo[i] = ((i * 24) + cycleTimeBufferHrs) * millisecondsInHour, memo), {}),
+  bug: { 0: (48 + cycleTimeBufferHrs) * millisecondsInHour},
+  chore: { 0: (24 + cycleTimeBufferHrs) * millisecondsInHour},
+  release: { 0: (24 + cycleTimeBufferHrs) * millisecondsInHour},
 };
 
-function msToDuration(ms: number) {
-  const seconds = +(ms / timeToMs.seconds).toFixed(1),
-    minutes = +(ms / timeToMs.minutes).toFixed(1),
-    hours = +(ms / timeToMs.hours).toFixed(1),
-    days = +(ms / timeToMs.days).toFixed(1);
+function formatDuration(ms: number): string {
+  const hours = +(ms / millisecondsInHour).toFixed(1),
+    days = +(ms / millisecondsInDay).toFixed(1);
 
-  if (seconds < 60) return `${seconds} secs`;
-  else if (minutes < 60) return `${minutes} mins`;
-  else if (hours < 24) return `${hours} hrs`;
-  else return `${days} Days`
+  return hours < 24 ? `${hours} hrs` : `${days} days`
 }
 
 function cycleTimeThresholdColor(story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails): string {
@@ -61,7 +50,7 @@ function cycleTimeThresholdColor(story: PivotalStory, cycleTimeKey: keyof Pivota
     if (story.cycle_time_details[cycleTimeKey] >= cycleTimeThresholds[story.story_type][story.estimate || 0]) {
       return figJamBase.red;
     }
-  } else if (story.cycle_time_details[cycleTimeKey] >= timeToMs.days) {
+  } else if (story.cycle_time_details[cycleTimeKey] >= millisecondsInDay) {
     return figJamBase.red;
   }
 
@@ -71,22 +60,25 @@ function cycleTimeThresholdColor(story: PivotalStory, cycleTimeKey: keyof Pivota
 function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails) {
   if (story.cycle_time_details[cycleTimeKey] <= 0) return;
 
+  sticky.text("\n")
   sticky.textWithFormatting(() => {
     sticky.textWithFormatting(`${cycleTimeHeaders[cycleTimeKey]}: `, {fontName: fontInterItalic});
-    sticky.textWithFormatting(`${msToDuration(story.cycle_time_details[cycleTimeKey])}\n`, {fill: cycleTimeThresholdColor(story, cycleTimeKey)});
+    sticky.textWithFormatting(formatDuration(story.cycle_time_details[cycleTimeKey]), {fill: cycleTimeThresholdColor(story, cycleTimeKey)});
   }, {listType: "UNORDERED"});
 }
 
-export function pivotalSticky(story: PivotalStory): StickyNode {
+export default function pivotalSticky(story: PivotalStory): StickyNode {
   const sticky = new Sticky();
   
   sticky.text(`${storyTypeEmoji[story.story_type]} `);
   sticky.textWithFormatting(story.name.replace(releaseLinkRegex, ""), {fontName: fontInterBold, url: story.url}); 
-  sticky.text("\n\n");
+  sticky.text("\n");
+
   if (story.story_type === "feature") {
+    sticky.text("\n");
     sticky.textWithFormatting(() => {
       sticky.textWithFormatting("Estimate: ", {fontName: fontInterItalic});
-      sticky.text(`${story.estimate}\n`);
+      sticky.text(`${story.estimate}`);
     }, {listType: "UNORDERED"});
   }
 
@@ -94,6 +86,7 @@ export function pivotalSticky(story: PivotalStory): StickyNode {
   cycleTimesToDisplay.forEach(cycleTimeKey => cycleTimeDetails(sticky, story, cycleTimeKey));
 
   if (story.labels.length > 0) {
+    sticky.text("\n");
     sticky.textWithFormatting(() => {
       sticky.text("\n| ");
       story.labels.forEach(({name}) => {

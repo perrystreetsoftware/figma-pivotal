@@ -32,14 +32,13 @@ export default class Sticky {
 
   private applyFormatting() {
     this.stickyFormatting.forEach(({start, end, format}) => {
-      if (format.url) this.sticky.text.setRangeHyperlink(start, end, {type: "URL", value: format.url});
+      if (format.url) this.sticky.text.setRangeHyperlink(start, end, { type: "URL", value: format.url });
       if (format.fontName) this.sticky.text.setRangeFontName(start, end, format.fontName);
       if (format.fill) this.sticky.text.setRangeFills(start, end, [figma.util.solidPaint(format.fill)]);
       if (format.fontSize) this.sticky.text.setRangeFontSize(start, end, format.fontSize);
       if (format.listType) this.sticky.text.setRangeListOptions(start, end, { type: format.listType });
       if (format.lineHeight) this.sticky.text.setRangeLineHeight(start, end, { unit: "PIXELS", value: format.lineHeight });
     });
-    // this.sticky.text.getStyledTextSegments(["fontName", "hyperlink"]).forEach(console.log);
   }
 
   getNode() {
