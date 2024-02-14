@@ -1,5 +1,5 @@
-import { groupBy } from "ramda";
-import { getWeek } from "date-fns";
+import groupBy from "ramda/src/groupBy";
+import getWeek from "date-fns/getWeek";
 
 import { fetchStoriesByEpic } from "./pivotal";
 import pivotalSticky from "./pivotalSticky";
