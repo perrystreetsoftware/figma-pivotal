@@ -3,6 +3,8 @@ declare type PivotalStoryType = "feature" | "bug" | "chore" | "release";
 declare type PivotalState = "accepted" | "delivered" | "finished" | "started" | 
   "rejected" | "planned" | "unstarted" | "unscheduled";
 
+declare type PivotalReviewStatus = "unstarted" | "in_review" | "pass" | "revise";
+
 declare type PivotalLabel = {
   id: number,
   name: string
@@ -22,16 +24,25 @@ declare type PivotalCycleTimeDetails = {
   rejected_count: number
 }
 
+declare type PivotalReview = {
+  id: number,
+  reviewer_id: number,
+  status: PivotalReviewStatus
+}
+
 declare type PivotalStory = {
   id: number,
   name: string,
   url: string,
+  accepted_at: string,
+  estimate: number,
+  project_id: number,
+  owner_ids: number[],
   story_type: PivotalStoryType,
   labels: PivotalLabel[],
   cycle_time_details: PivotalCycleTimeDetails,
   transitions: PivotalStoryTransition[],
-  accepted_at: string,
-  estimate: number
+  reviews: PivotalReview[]
 }
 
 declare type PivotalEpic = {
@@ -42,7 +53,7 @@ declare type PivotalEpic = {
   label: PivotalLabel
 }
 
-declare type Format = {
+declare type FigmaTextFormat = {
   start: number;
   end: number;
   format: {
@@ -53,4 +64,13 @@ declare type Format = {
     listType?: "ORDERED" | "UNORDERED";
     lineHeight?: number;
   }
+}
+
+declare type PSSUser = {
+  name?: string,
+  pivotal_id?: number,
+  pivotal_projects?: string[]
+  slack_id?: string,
+  github_emails?: string[],
+  type?: "SERVER" | "ANDROID" | "IOS" | "WEB" | "PRODUCT_QA" | "DEV_QA" | "DESIGN_QA"
 }

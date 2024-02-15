@@ -1,6 +1,6 @@
 export default class Sticky {
   sticky: StickyNode;
-  stickyFormatting: Format[];
+  stickyFormatting: FigmaTextFormat[];
 
   constructor() {
     this.sticky = figma.createSticky();
@@ -11,7 +11,7 @@ export default class Sticky {
     this.sticky.text.characters += string;
   }
 
-  textWithFormatting(callbackOrString: Function | string, format: Format["format"]) {
+  textWithFormatting(callbackOrString: Function | string, format: FigmaTextFormat["format"]) {
     const start = this.sticky.text.characters.length;
     typeof callbackOrString == "function" ? callbackOrString() : this.sticky.text.characters += callbackOrString;
     const end = this.sticky.text.characters.length;

@@ -4,8 +4,12 @@ type Param = { [key: string]: string };
 
 export async function fetchStoriesByEpic(pivotalToken: string, epicId: number): Promise<PivotalStory[]> {
   const epic = await fetchEpic(pivotalToken, epicId);
-  const params = { with_label: encodeURI(epic.label.name), fields: ":default,labels(name),cycle_time_details(:default),transitions(state,occurred_at)"}
+  const params = { with_label: encodeURI(epic.label.name), fields: "name,url,accepted_at,estimate,project_id,owner_ids,story_type,labels(name),cycle_time_details(:default),transitions(state,occurred_at),reviews(reviewer_id,status)"}
   return await fetchPivotal(pivotalToken, `projects/${epic.project_id}/stories`, params) as PivotalStory[];
+}
+
+export async function getMembers(pivotalToken: string, accountId: number): Promise<any[]> {
+  return fetchPivotal(pivotalToken, `accounts/${accountId}/memberships`);
 }
 
 export async function fetchEpic(pivotalToken: string, epicId: number): Promise<PivotalEpic> {

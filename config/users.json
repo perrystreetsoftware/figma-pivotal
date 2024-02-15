@@ -1,0 +1,531 @@
+{
+  "adam": {
+    "name": "Adam Tucker",
+    "pivotal_id": 3394708,
+    "pivotal_projects": [
+      "ops"
+    ],
+    "slack_id": "U01V461NZQR",
+    "github_emails": [
+      "adamt@perrystreet.com",
+      "adam.j.tucker@gmail.com",
+      "adamjt@users.noreply.github.com"
+    ]
+  },
+  "alberto": {
+    "name": "Alberto Vara",
+    "pivotal_id": 3414370,
+    "pivotal_projects": [
+      "revenue"
+    ],
+    "slack_id": "U02DM54RSCA",
+    "github_emails": [
+      "alberto@perrystreet.com",
+      "kalivara@users.noreply.github.com"
+    ],
+    "type": "SERVER"
+  },
+  "alfred": {
+    "name": "Alfred Amon Afutu",
+    "pivotal_id": 3463909,
+    "pivotal_projects": [
+      "revenue",
+      "pigeon"
+    ],
+    "slack_id": "U0487TWUFDM",
+    "github_emails": [
+      "chatwithalfy@gmail.com",
+      "alfred@perrystreet.com"
+    ],
+    "type": "ANDROID"
+  },
+  "aline": {
+    "name": "Aline Pasetti",
+    "pivotal_id": 3479477,
+    "pivotal_projects": [
+      "pigeon",
+      "websites"
+    ],
+    "slack_id": "U057002H7B4",
+    "github_emails": [
+      "56484053+alinepasetti@users.noreply.github.com",
+      "pasettialine@gmail.com"
+    ],
+    "type": "WEB"
+  },
+  "alison": {
+    "name": "Alison Grippo",
+    "pivotal_id": 3490084,
+    "pivotal_projects": [
+      "user",
+      "spectrum",
+      "revenue"
+    ],
+    "slack_id": "U062LBWKNH4",
+    "type": "PRODUCT_QA"
+  },
+  "artie": {
+    "name": "Artie Rosser",
+    "pivotal_id": 3466728,
+    "pivotal_projects": [
+      "bkdr"
+    ],
+    "slack_id": "U04DV0XPBS8",
+    "github_emails": [
+      "119874243+artierosser-ps@users.noreply.github.com"
+    ]
+  },
+  "bastian": {
+    "name": "Bastian Koell",
+    "pivotal_id": 3377455,
+    "pivotal_projects": [
+      "revenue",
+      "pigeon"
+    ],
+    "slack_id": "U4BTYC483",
+    "github_emails": [
+      "bastian@perrystreet.com",
+      "bastian.koell@gmail.com"
+    ],
+    "type": "SERVER"
+  },
+  "ben": {
+    "name": "Ben Duffield",
+    "pivotal_id": 3378519,
+    "pivotal_projects": [
+      "ops"
+    ],
+    "slack_id": "USXNV1UG0",
+    "type": "DEV_QA",
+    "github_emails": [
+      "ben@perrystreet.com",
+      "44421912+ben-duffield@users.noreply.github.com",
+      "ben-duffield@users.noreply.github.com"
+    ]
+  },
+  "bruno": {
+    "name": "Bruno Campos",
+    "pivotal_id": 3364213,
+    "pivotal_projects": [
+      "user"
+    ],
+    "slack_id": "U01AA5UFSSX",
+    "github_emails": [
+      "bruno@perrystreet.com",
+      "camposbrunocampos@gmail.com"
+    ],
+    "type": "IOS"
+  },
+  "cody": {
+    "name": "Cody Smith",
+    "pivotal_id": 3378749,
+    "pivotal_projects": [
+      "bkdr"
+    ],
+    "slack_id": "U7J4H181H",
+    "type": "PRODUCT_QA"
+  },
+  "cristian": {
+    "name": "Cristian Constantinescu",
+    "pivotal_id": 3429737,
+    "pivotal_projects": [
+      "ops"
+    ],
+    "slack_id": "U02SHN8ALJF",
+    "github_emails": [
+      "cristian@perrystreet.com",
+      "97045343+cristianc-pss@users.noreply.github.com"
+    ]
+  },
+  "diego": {
+    "name": "Diego Chohfi",
+    "pivotal_id": 3377454,
+    "pivotal_projects": [
+      "pigeon"
+    ],
+    "slack_id": "U05J6AX89LJ",
+    "github_emails": [
+      "diego@perrystreet.com",
+      "dchohfi@gmail.com"
+    ],
+    "type": "IOS"
+  },
+  "eric": {
+    "name": "Eric Silverberg",
+    "github_emails": [
+      "eric@perrystreet.com",
+      "esilverberg@users.noreply.github.com",
+      "eric@ericsilverberg.com"
+    ]
+  },
+  "grace": {
+    "name": "Grace Wilkes",
+    "pivotal_id": 3466844,
+    "pivotal_projects": [
+      "pigeon",
+      "websites"
+    ],
+    "slack_id": "U04DDNH6C5D",
+    "github_emails": [
+      "119970083+GracePerry@users.noreply.github.com",
+      "perrystreet@Perrys-MBP.attlocal.net",
+      "perrystreet@Perrys-MacBook-Pro.local",
+      "53713122+Xxyumi-hub@users.noreply.github.com"
+    ]
+  },
+  "jared": {
+    "name": "Jared Christman",
+    "pivotal_id": 3490471,
+    "pivotal_projects": [
+      "user",
+      "spectrum",
+      "revenue",
+      "design_jared"
+    ],
+    "slack_id": "U063LFZCD2T",
+    "type": "DESIGN_QA"
+  },
+  "jasin": {
+    "name": "Jasin Ahmed",
+    "pivotal_id": 3419865,
+    "pivotal_projects": [
+      "revenue",
+      "pigeon",
+      "qa"
+    ],
+    "slack_id": "U02H3FRUGLA",
+    "type": "QA",
+    "github_emails": [
+      "jasin@perrystreet.com"
+    ]
+  },
+  "jonny": {
+    "name": "Jonny Rodriguez",
+    "pivotal_id": 3406960,
+    "pivotal_projects": [
+      "user",
+      "spectrum",
+      "design_jonny"
+    ],
+    "slack_id": "U018G04QVGW",
+    "type": "DESIGN_QA"
+  },
+  "jowy": {
+    "name": "Jowy Ptashinkski",
+    "pivotal_id": 3410906,
+    "pivotal_projects": [
+      "user",
+      "spectrum",
+      "bkdr",
+      "qa"
+    ],
+    "slack_id": "U3TU8CJGJ",
+    "type": "QA"
+  },
+  "justin": {
+    "name": "Justin Mazzocchi",
+    "pivotal_id": 3445977,
+    "pivotal_projects": [
+      "bkdr"
+    ],
+    "slack_id": "U8JMNEDS8",
+    "github_emails": [
+      "justinm@perrystreet.com",
+      "2831158+jzzocc@users.noreply.github.com"
+    ],
+    "type": "DEV_QA"
+  },
+  "katie": {
+    "name": "Katie Rowan",
+    "pivotal_id": 3423667,
+    "pivotal_projects": [
+      "bkdr",
+      "revenue",
+      "design_katie"
+    ],
+    "slack_id": "U02L1CADJTH",
+    "type": "DESIGN_QA"
+  },
+  "kuba": {
+    "name": "Kuba Grzeszczak",
+    "pivotal_id": 3465122,
+    "pivotal_projects": [
+      "bkdr",
+      "revenue",
+      "user",
+      "ops",
+      "spectrum"
+    ],
+    "slack_id": "U04A3B7NU2G",
+    "type": "G11N",
+    "github_emails": [
+      "118208456+KubaGrzeszczak@users.noreply.github.com",
+      "kuba@MacBook-Air-Kuba.local",
+      "kuba@perrystreet.com"
+    ]
+  },
+  "liudas": {
+    "name": "Liudas Survila",
+    "pivotal_id": 3392300,
+    "pivotal_projects": [
+      "user",
+      "client_tech"
+    ],
+    "slack_id": "U01TZUJ0CUQ",
+    "github_emails": [
+      "liudas@perrystreet.com",
+      "liudas.survila@gmail.com"
+    ],
+    "type": "ANDROID"
+  },
+  "lucas": {
+    "name": "Lucas Cavalcante",
+    "pivotal_id": 3402995,
+    "pivotal_projects": [
+      "spectrum",
+      "user"
+    ],
+    "slack_id": "U024S41L7GW",
+    "github_emails": [
+      "lucasc@perrystreet.com",
+      "co.lucasc@gmail.com",
+      "lucas@perrystreet.com"
+    ]
+  },
+  "lumina": {
+    "name": "Lumina Scheiderich",
+    "pivotal_id": 3452668,
+    "pivotal_projects": [
+      "bkdr"
+    ],
+    "slack_id": "U03N5CH3BCM",
+    "github_emails": [
+      "lumina@samsch.org",
+      "10436679+samsch@users.noreply.github.com"
+    ],
+    "type": "WEB"
+  },
+  "marius": {
+    "name": "Marius Bosch",
+    "pivotal_id": 3442792,
+    "pivotal_projects": [
+      "revenue"
+    ],
+    "slack_id": "U03ASV0C2A2",
+    "github_emails": [
+      "marius@perrystreet.com",
+      "mariusmorabosch.dev@gmail.com"
+    ],
+    "type": "ANDROID"
+  },
+  "matheus_d": {
+    "name": "Matheus Dutra",
+    "pivotal_id": 3452667,
+    "pivotal_projects": [
+      "user"
+    ],
+    "slack_id": "U03MUMNM34P",
+    "github_emails": [
+      "48701674+matheusmdutra03@users.noreply.github.com",
+      "matheusd@perrystreet.com"
+    ]
+  },
+  "matheus_l": {
+    "name": "Mathues Luz",
+    "pivotal_id": 3389014,
+    "pivotal_projects": [
+      "spectrum",
+      "revenue",
+      "user"
+    ],
+    "slack_id": "U01R8P1FPK4",
+    "github_emails": [
+      "matheus@perrystreet.com",
+      "matheussll@users.noreply.github.com",
+      "matheusstefanelloluz@hotmail.com"
+    ],
+    "type": "IOS"
+  },
+  "oscar": {
+    "name": "Oscar Greco",
+    "pivotal_id": 3418539,
+    "pivotal_projects": [
+      "revenue"
+    ],
+    "slack_id": "U02GK6G2N9Z",
+    "github_emails": [
+      "oscar@perrystreet.com",
+      "oscarvgg@users.noreply.github.com",
+      "[oscar@perrystreet.com](mailto:oscar@perrystreet.com)"
+    ]
+  },
+  "oskar": {
+    "name": "Oskar Lakner",
+    "pivotal_id": 3491631,
+    "pivotal_projects": [
+      "ops",
+      "user",
+      "revenue",
+      "spectrum"
+    ],
+    "slack_id": "U067TGT123F",
+    "github_emails": [
+      "oskar@perrystreet.com"
+    ]
+  },
+  "nicholas": {
+    "name": "Nicholas Luz",
+    "github_emails": [
+      "nicholas.s.luz@gmail.com",
+      "nicholas@perrystreet.com"
+    ]
+  },
+  "niccolo": {
+    "name": "Niccolo Olivares",
+    "github_emails": [
+      "84097464+niccoloolivares@users.noreply.github.com"
+    ]
+  },
+  "petr": {
+    "name": "Petr Pavlik",
+    "pivotal_id": 3377456,
+    "pivotal_projects": [
+      "revenue"
+    ],
+    "slack_id": "U0561HSL3T3",
+    "github_emails": [
+      "petr@perrystreet.com",
+      "petrpavlik@me.com",
+      "petrpavlik@users.noreply.github.com",
+      "pavlipe7@gmail.com",
+      "peter@perrystreet.com"
+    ],
+    "type": "IOS"
+  },
+  "piotr": {
+    "name": "Piotr Wald",
+    "pivotal_id": 3423805,
+    "pivotal_projects": [
+      "ops"
+    ],
+    "slack_id": "U02K84GN13M",
+    "github_emails": [
+      "piotr@perrystreet.com",
+      "34128243+PiotrWald@users.noreply.github.com",
+      "valdpiotr@gmail.com"
+    ]
+  },
+  "sara": {
+    "name": "Sara Rekalde",
+    "github_emails": [
+      "132610814+sararekalde@users.noreply.github.com"
+    ]
+  },
+  "scott": {
+    "name": "Scott Russell",
+    "pivotal_id": 3377451,
+    "slack_id": "U04911Y9D"
+  },
+  "stelios": {
+    "name": "Stelios Frantzeskakis",
+    "pivotal_id": 3364214,
+    "pivotal_projects": [
+      "spectrum",
+      "user"
+    ],
+    "slack_id": "UDQSQBELA",
+    "github_emails": [
+      "stelios@perrystreet.com",
+      "44579798+steliosfran@users.noreply.github.com"
+    ],
+    "type": "ANDROID"
+  },
+  "tim": {
+    "name": "Tim Labeeuw",
+    "github_emails": [
+      "tlabeeuw@users.noreply.github.com",
+      "tim@perrystreet.com"
+    ]
+  },
+  "thiago": {
+    "name": "Thiago Pereira",
+    "pivotal_id": 3489544,
+    "pivotal_projects": [
+      "revenue"
+    ],
+    "slack_id": "U062373SF6E",
+    "github_emails": [
+      "thiago@perrystreet.com",
+      "38784433+thi-feonir@users.noreply.github.com"
+    ]
+  },
+  "wellington": {
+    "name": "Wellington Pereira",
+    "pivotal_id": 3458261,
+    "pivotal_projects": [
+      "user"
+    ],
+    "slack_id": "U040Y053VR7",
+    "github_emails": [
+      "wellington.costa128@gmail.com",
+      "wellington@perrystreet.com"
+    ]
+  },
+  "xx_amazon": {
+    "github_emails": [
+      "88133677+ranshid@users.noreply.github.com",
+      "ranshid@amazon.com",
+      "oran@redislabs.com",
+      "guy.benoish@redislabs.com",
+      "harkrisp@amazon.com",
+      "madelyneolson@gmail.com",
+      "34459052+madolson@users.noreply.github.com",
+      "39919229+santansarah@users.noreply.github.com",
+      "78144248+uriyage@users.noreply.github.com",
+      "106696198+knggk@users.noreply.github.com",
+      "moti.cohen@redis.com"
+    ]
+  },
+  "xx_bots": {
+    "github_emails": [
+      "73448015+runway-github[bot]@users.noreply.github.com",
+      "29139614+renovate[bot]@users.noreply.github.com",
+      "49699333+dependabot[bot]@users.noreply.github.com",
+      "41898282+github-actions[bot]@users.noreply.github.com",
+      "github+dockerlibrarybot@infosiftr.com",
+      "i18nbot@perrystreet.com"
+    ]
+  },
+  "xx_old": {
+    "github_emails": [
+      "vic@perrystreet.com",
+      "xvicxpx@gmail.com",
+      "steve@perrystreet.com",
+      "steve@stevestrates.com",
+      "andremoahh@gmail.com",
+      "andre.mota@glintt.com",
+      "donnie@perrystreet.com",
+      "gustavosnl@gmail.com",
+      "sofia@perrystreet.com",
+      "william@perrystreet.com",
+      "87148247+William-Marcelo-Gomes@users.noreply.github.com",
+      "carly@perrystreet.com",
+      "carlymho@fastmail.com"
+    ]
+  },
+  "xx_unknown": {
+    "github_emails": [
+      "yangning@bu.edu",
+      "laurence0521@gmail.com",
+      "tomlevy93@gmail.com",
+      "abc3844@126.com",
+      "zhaozhao.zz@alibaba-inc.com",
+      "binloveplay1314@qq.com",
+      "wen.hui.ware@gmail.com",
+      "gabiganam@gmail.com",
+      "sundbcn@gmail.com",
+      "admwiggin@gmail.com",
+      "jason@openc3.com"
+    ]
+  }
+}

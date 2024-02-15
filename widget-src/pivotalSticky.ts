@@ -1,6 +1,8 @@
 import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
+import uniq from "ramda/src/uniq";
 import { fontInterBold, fontInterItalic } from "./fonts";
 import Sticky from "./sticky";
+import { usersByPivotalId } from "./users";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
@@ -10,7 +12,7 @@ const storyTypeEmoji: { [key in PivotalStoryType]: string } = {
   feature: "⭐️",
   bug: "🐞",
   chore: "⚙️",
-  release: "🚀",
+  release: "🚀"
 };
 
 const storyTypeColor: { [key in PivotalStoryType]: string } = {
@@ -31,7 +33,7 @@ const cycleTimeHeaders: { [key in keyof PivotalCycleTimeDetails]: string } = {
 
 const cycleTimeBufferHrs = 12;
 
-const cycleTimeThresholds: { [key: string]: {[key: number]: number} } = {
+const startedTimeThresholds: { [key: string]: {[key: number]: number} } = {
   feature: [0, 1, 2, 3, 5, 8, 13].reduce<{[key: number]: number}>((memo, i) => (memo[i] = ((i * 24) + cycleTimeBufferHrs) * millisecondsInHour, memo), {}),
   bug: { 0: (48 + cycleTimeBufferHrs) * millisecondsInHour},
   chore: { 0: (24 + cycleTimeBufferHrs) * millisecondsInHour},
@@ -45,16 +47,22 @@ function formatDuration(ms: number): string {
   return hours < 24 ? `${hours} hrs` : `${days} days`
 }
 
-function cycleTimeThresholdColor(story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails): string {
-  if (cycleTimeKey === "started_time") {
-    if (story.cycle_time_details[cycleTimeKey] >= cycleTimeThresholds[story.story_type][story.estimate || 0]) {
-      return figJamBase.red;
-    }
-  } else if (story.cycle_time_details[cycleTimeKey] >= millisecondsInDay) {
-    return figJamBase.red;
+function cycleTimeThresholdColor({story_type, cycle_time_details, estimate}: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails): string {
+  const thresholds: { [key in keyof PivotalCycleTimeDetails]: number } = {
+    started_time: startedTimeThresholds[story_type][estimate || 0],
+    total_cycle_time: startedTimeThresholds[story_type][estimate || 0] + (2 * millisecondsInDay),
+    finished_time: millisecondsInDay,
+    delivered_time: millisecondsInDay,
+    rejected_time: 0,
+    rejected_count: 0
   }
 
-  return figJamBase.black;
+  return cycle_time_details[cycleTimeKey] > thresholds[cycleTimeKey] ? figJamBase.red : figJamBase.black;
+}
+
+function toSentence(parts: string[]): string {
+  if (parts.length == 2) return parts.join(' and ');
+  return parts.join(', ').replace(/,\s([^,]+)$/, ', and $1');
 }
 
 function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails) {
@@ -64,14 +72,25 @@ function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: key
   sticky.textWithFormatting(() => {
     sticky.textWithFormatting(`${cycleTimeHeaders[cycleTimeKey]}: `, {fontName: fontInterItalic});
     sticky.textWithFormatting(formatDuration(story.cycle_time_details[cycleTimeKey]), {fill: cycleTimeThresholdColor(story, cycleTimeKey)});
+    if (cycleTimeKey === "started_time" || cycleTimeKey === "delivered_time") {
+      sticky.textWithFormatting(` by ${toSentence(developers(story, cycleTimeKey === "delivered_time"))}`, {fontSize: 10});
+    }
   }, {listType: "UNORDERED"});
+}
+
+function developers({owner_ids, reviews}: PivotalStory, qa: boolean): string[] {
+  const all: number[] = uniq(owner_ids.map(id => id).concat(reviews.map(({reviewer_id}) => reviewer_id)));
+  return all
+    .filter(id => usersByPivotalId[id])
+    .filter(id => qa === (usersByPivotalId[id].type || "").includes("QA"))
+    .map(id => usersByPivotalId[id].name!);
 }
 
 export default function pivotalSticky(story: PivotalStory): StickyNode {
   const sticky = new Sticky();
   
   sticky.text(`${storyTypeEmoji[story.story_type]} `);
-  sticky.textWithFormatting(story.name.replace(releaseLinkRegex, ""), {fontName: fontInterBold, url: story.url}); 
+  sticky.textWithFormatting(story.name.replace(releaseLinkRegex, ""), {fontName: fontInterBold, url: story.url});
   sticky.text("\n");
 
   if (story.story_type === "feature") {
@@ -90,7 +109,8 @@ export default function pivotalSticky(story: PivotalStory): StickyNode {
     sticky.textWithFormatting(() => {
       sticky.text("\n| ");
       story.labels.forEach(({name}) => {
-        sticky.textWithFormatting(name, {fill: figJamBase.green});
+        const url = `https://www.pivotaltracker.com/n/projects/${story.project_id}/search?q=${encodeURI(`label:"${name}"`)}`;
+        sticky.textWithFormatting(name, {fill: figJamBase.green, url});
         sticky.text(" | ");
       });
     }, {lineHeight: 15, fontSize: 10});
