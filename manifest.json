@@ -3,8 +3,6 @@
   "id": "1336799490097842881",
   "api": "1.0.0",
   "main": "dist/code.js",
-  "capabilities": [],
-  "enableProposedApi": false,
   "editorType": [
     "figjam"
   ],
