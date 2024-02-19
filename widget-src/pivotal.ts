@@ -62,13 +62,13 @@ async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, para
 async function fetchPivotal<T>(pivotalToken: string, path: String, params?: Param): Promise<Response<T>> {
   const url = `https://www.pivotaltracker.com/services/v5/${path}?${paramsToString({ token: pivotalToken, envelope: true, ...params })}`;
   const response = await fetch(url, { headers });
-  const responseJson: PivotalResponseEnvelope<T> = await response.json()
-  console.log(params, responseJson.pagination);
+  const {data, pagination: { offset, limit, total }}: PivotalResponseEnvelope<T> = await response.json()
+
   return {
-    data: responseJson.data,
+    data,
     paginate: {
-      more: (responseJson.pagination.offset + responseJson.pagination.limit) < responseJson.pagination.total,
-      next: { offset: responseJson.pagination.offset + responseJson.pagination.limit, limit: responseJson.pagination.limit }
+      more: (offset + limit) < total,
+      next: { offset: offset + limit, limit }
     }
   };
 }
