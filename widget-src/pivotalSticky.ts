@@ -1,6 +1,6 @@
 import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
 import uniq from "ramda/src/uniq";
-import { fontInterBold, fontInterItalic } from "./fonts";
+import { fonts } from "./fonts";
 import Sticky from "./sticky";
 import { usersByPivotalId } from "./users";
 
@@ -70,7 +70,7 @@ function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: key
 
   sticky.text("\n")
   sticky.textWithFormatting(() => {
-    sticky.textWithFormatting(`${cycleTimeHeaders[cycleTimeKey]}: `, {fontName: fontInterItalic});
+    sticky.textWithFormatting(`${cycleTimeHeaders[cycleTimeKey]}: `, {fontName: fonts.interItalic});
     sticky.textWithFormatting(formatDuration(story.cycle_time_details[cycleTimeKey]), {fill: cycleTimeThresholdColor(story, cycleTimeKey)});
     if (cycleTimeKey === "started_time" || cycleTimeKey === "delivered_time") {
       sticky.textWithFormatting(` by ${toSentence(developers(story, cycleTimeKey === "delivered_time"))}`, {fontSize: 10});
@@ -90,13 +90,13 @@ export default function pivotalSticky(story: PivotalStory): StickyNode {
   const sticky = new Sticky();
   
   sticky.text(`${storyTypeEmoji[story.story_type]} `);
-  sticky.textWithFormatting(story.name.replace(releaseLinkRegex, ""), {fontName: fontInterBold, url: story.url});
+  sticky.textWithFormatting(story.name.replace(releaseLinkRegex, ""), {fontName: fonts.interBold, url: story.url});
   sticky.text("\n");
 
   if (story.story_type === "feature") {
     sticky.text("\n");
     sticky.textWithFormatting(() => {
-      sticky.textWithFormatting("Estimate: ", {fontName: fontInterItalic});
+      sticky.textWithFormatting("Estimate: ", {fontName: fonts.interItalic});
       sticky.text(`${story.estimate}`);
     }, {listType: "UNORDERED"});
   }

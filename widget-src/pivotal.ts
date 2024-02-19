@@ -21,18 +21,20 @@ type Response<T> = {
   }
 };
 
-const fields = "name,url,accepted_at,estimate,project_id,owner_ids,story_type,labels(name),cycle_time_details(:default),reviews(reviewer_id,status)";
+const storyFields = "name,url,accepted_at,estimate,project_id,owner_ids,story_type,labels(name),cycle_time_details(:default),reviews(reviewer_id,status)";
+
+const epicFields = "name,url,project_id,label(id,name)";
 
 const headers = { "Content-Type": "application/json", "Accept": "application/json" };
 
 export async function fetchStoriesByEpic(pivotalToken: string, epicId: number): Promise<PivotalStory[]> {
   const epic = await fetchEpic(pivotalToken, epicId);
-  const params = { with_label: encodeURI(epic.label.name), fields}
+  const params = { with_label: encodeURI(epic.label.name), fields: storyFields}
   return fetchPaginatedPivotal<PivotalStory>(pivotalToken, `projects/${epic.project_id}/stories`, params);
 }
 
 export async function fetchStoriesByPeriod(pivotalToken: string, projectId: number, startDate: Date, endDate: Date): Promise<PivotalStory[]> {
-  const params = { accepted_after: startDate.toISOString(), accepted_before: endDate.toISOString(), fields };
+  const params = { accepted_after: startDate.toISOString(), accepted_before: endDate.toISOString(), fields: storyFields };
   return fetchPaginatedPivotal<PivotalStory>(pivotalToken, `projects/${projectId}/stories`, params);
 }
 
@@ -42,7 +44,7 @@ export async function fetchStoriesByOwnerId(pivotalToken: string, projectId: num
 }
 
 async function fetchEpic(pivotalToken: string, epicId: number): Promise<PivotalEpic> {
-  const { data } = await fetchPivotal<PivotalEpic>(pivotalToken, `epics/${epicId}`, {fields: "name,url,project_id,label(id,name)"});
+  const { data } = await fetchPivotal<PivotalEpic>(pivotalToken, `epics/${epicId}`, {fields: epicFields});
   return data;
 }
 
@@ -50,7 +52,7 @@ function paramsToString(params: Param): string {
   return Object.keys(params).map((key: string) => `${key}=${encodeURI(params[key].toString())}`).join("&");
 }
 
-async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, params?: Param): Promise<T[]> {
+async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, params: Param): Promise<T[]> {
   let {data, paginate} = await fetchPivotal<T[]>(pivotalToken, path, params);
   while (paginate.more) {
     const nextResponse = await fetchPivotal<T[]>(pivotalToken, path, { ...params, ...paginate.next });
@@ -59,10 +61,10 @@ async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, para
   }
   return data;
 }
-async function fetchPivotal<T>(pivotalToken: string, path: String, params?: Param): Promise<Response<T>> {
+async function fetchPivotal<T>(pivotalToken: string, path: String, params: Param): Promise<Response<T>> {
   const url = `https://www.pivotaltracker.com/services/v5/${path}?${paramsToString({ token: pivotalToken, envelope: true, ...params })}`;
   const response = await fetch(url, { headers });
-  const {data, pagination: { offset, limit, total }}: PivotalResponseEnvelope<T> = await response.json()
+  const { data, pagination: { offset, limit, total } }: PivotalResponseEnvelope<T> = await response.json();
 
   return {
     data,

@@ -40,7 +40,7 @@ const commands: {[key: string]: (parameters: ParameterValues) => Promise<Pivotal
 };
 
 figma.on("run", async ({ command, parameters }: RunEvent) => {
-  const stories: PivotalStory[] = await commands[command](parameters!);
+  const stories = await commands[command](parameters!);
 
   const storiesByAcceptedAtWeek: {[key: string]: PivotalStory[]} = byWeek(stories);
 

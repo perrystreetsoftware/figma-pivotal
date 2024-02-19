@@ -41,7 +41,7 @@ export default class Sticky {
     });
   }
 
-  getNode() {
+  getNode(): StickyNode {
     this.applyFormatting();
     return this.sticky;
   }
