@@ -62,6 +62,16 @@
         "allowFreeform": true
       },
       {
+        "name": "Start Date",
+        "key": "startDate",
+        "allowFreeform": true
+      },
+      {
+        "name": "End Date",
+        "key": "endDate",
+        "allowFreeform": true
+      },
+      {
         "name": "Owner",
         "key": "owner",
         "allowFreeform": true

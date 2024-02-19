@@ -31,11 +31,9 @@ const commands: {[key: string]: (parameters: ParameterValues) => Promise<Pivotal
     );
   },
   async byOwner(parameters: ParameterValues): Promise<PivotalStory[]> {
-      return fetchStoriesByOwnerId(
-      parameters!.pivotalToken,
-      parseInt(parameters!.pivotalProjectId, 10),
-      users[parameters!.owner].pivotal_id!
-    );
+    const pivotalId = users[parameters!.pivotalOwner].pivotal_id!;
+    const stories = await this.byDate(parameters);
+    return stories.filter(({owner_ids, reviews}) => owner_ids.includes(pivotalId) || reviews.some(({reviewer_id}) => reviewer_id == pivotalId));
   }
 };
 

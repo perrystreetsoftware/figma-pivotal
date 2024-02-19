@@ -38,11 +38,6 @@ export async function fetchStoriesByPeriod(pivotalToken: string, projectId: numb
   return fetchPaginatedPivotal<PivotalStory>(pivotalToken, `projects/${projectId}/stories`, params);
 }
 
-export async function fetchStoriesByOwnerId(pivotalToken: string, projectId: number, ownerId: number): Promise<PivotalStory[]> {
-  const params = { owner_id: ownerId, fields };
-  return fetchPaginatedPivotal<PivotalStory>(pivotalToken, `projects/${projectId}/stories`, params);
-}
-
 async function fetchEpic(pivotalToken: string, epicId: number): Promise<PivotalEpic> {
   const { data } = await fetchPivotal<PivotalEpic>(pivotalToken, `epics/${epicId}`, {fields: epicFields});
   return data;
