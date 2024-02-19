@@ -10,10 +10,10 @@ declare type PivotalLabel = {
   name: string
 }
 
-declare type PivotalStoryTransition = {
-  state: PivotalState,
-  occurred_at: string,
-}
+// declare type PivotalStoryTransition = {
+//   state: PivotalState,
+//   occurred_at: string,
+// }
 
 declare type PivotalCycleTimeDetails = {
   total_cycle_time: number,
@@ -41,7 +41,7 @@ declare type PivotalStory = {
   story_type: PivotalStoryType,
   labels: PivotalLabel[],
   cycle_time_details: PivotalCycleTimeDetails,
-  transitions: PivotalStoryTransition[],
+  // transitions: PivotalStoryTransition[],
   reviews: PivotalReview[]
 }
 

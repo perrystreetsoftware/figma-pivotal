@@ -1,10 +1,11 @@
 import groupBy from "ramda/src/groupBy";
 import getWeek from "date-fns/getWeek";
 
-import { fetchStoriesByEpic } from "./pivotal";
+import { fetchStoriesByEpic, fetchStoriesByPeriod, fetchStoriesByOwnerId } from "./pivotal";
 import pivotalSticky from "./pivotalSticky";
 import { createFrame, transferStickiesToSections } from "./frame";
 import { loadAllFonts } from "./fonts";
+import { users } from "./users";
 
 const byWeek = groupBy(({ accepted_at }: PivotalStory): string => {
   if (!accepted_at) return "Not Accepted";
@@ -14,11 +15,32 @@ const byWeek = groupBy(({ accepted_at }: PivotalStory): string => {
   return `W${getWeek(acceptedAt)} ${acceptedAtFormat}`;
 });
 
-figma.on("run", async ({ parameters }: RunEvent) => {
-  const stories = await fetchStoriesByEpic(
-    parameters!.pivotalToken,
-    parseInt(parameters!.pivotalEpicId.replace(/\D/g, ""), 10)
-  );
+const commands: {[key: string]: (parameters: ParameterValues) => Promise<PivotalStory[]>} = {
+  async byEpic(parameters: ParameterValues): Promise<PivotalStory[]> {
+    return fetchStoriesByEpic(
+      parameters!.pivotalToken,
+      parseInt(parameters!.pivotalEpicId.replace(/\D/g, ""), 10)
+    );
+  },
+  async byDate(parameters: ParameterValues): Promise<PivotalStory[]> {
+    return fetchStoriesByPeriod(
+      parameters!.pivotalToken,
+      parseInt(parameters!.pivotalProjectId, 10),
+      new Date(parameters!.startDate),
+      new Date(parameters!.endDate)
+    );
+  },
+  async byOwner(parameters: ParameterValues): Promise<PivotalStory[]> {
+      return fetchStoriesByOwnerId(
+      parameters!.pivotalToken,
+      parseInt(parameters!.pivotalProjectId, 10),
+      users[parameters!.owner].pivotal_id!
+    );
+  }
+};
+
+figma.on("run", async ({ command, parameters }: RunEvent) => {
+  const stories: PivotalStory[] = await commands[command](parameters!);
 
   const storiesByAcceptedAtWeek: {[key: string]: PivotalStory[]} = byWeek(stories);
 

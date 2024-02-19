@@ -12,13 +12,60 @@
     ],
     "reasoning": "We need to access Pivotal Tracker to fetch the stories and epics"
   },
-  "parameters": [{
-    "name": "Pivotal API Token",
-    "key": "pivotalToken",
-    "allowFreeform": true
+  "menu": [{
+    "name": "By Epic",
+    "command": "byEpic",
+    "parameters": [
+      {
+        "name": "Pivotal API Token",
+        "key": "pivotalToken",
+        "allowFreeform": true
+      },
+      {
+        "name": "Pivotal Epic ID",
+        "key": "pivotalEpicId",
+        "allowFreeform": true
+      }
+    ]
   }, {
-    "name": "Pivotal Epic ID",
-    "key": "pivotalEpicId",
-    "allowFreeform": true
+    "name": "By Date",
+    "command": "byDate",
+    "parameters": [
+      {
+        "name": "Pivotal API Token",
+        "key": "pivotalToken",
+        "allowFreeform": true
+      },
+      {
+        "name": "Pivotal Project ID",
+        "key": "pivotalProjectId",
+        "allowFreeform": true
+      },
+      {
+        "name": "Start Date",
+        "key": "startDate",
+        "allowFreeform": true
+      },
+      {
+        "name": "End Date",
+        "key": "endDate",
+        "allowFreeform": true
+      }
+    ]
+  }, {
+    "name": "By Owner",
+    "command": "byOwner",
+    "parameters": [
+      {
+        "name": "Pivotal API Token",
+        "key": "pivotalToken",
+        "allowFreeform": true
+      },
+      {
+        "name": "Owner",
+        "key": "owner",
+        "allowFreeform": true
+      }
+    ]
   }]
 }
