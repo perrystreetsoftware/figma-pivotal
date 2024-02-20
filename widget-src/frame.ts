@@ -1,38 +1,43 @@
-const stickySeparation = 20;
+const separation = 20;
 
-function createSectionFromFrame(frame: FrameNode) {
+const { figJamBaseLight, figJamBase } = figma.constants.colors;
+
+function createSectionFromFrame<T extends SceneNode>(frame: FrameNode, color: string, callback: ((child: T) => SceneNode) | undefined = undefined) : SectionNode {
+  frame.resizeWithoutConstraints(frame.width, frame.height);
+  frame.layoutMode = "NONE";
+
   const section = figma.createSection();
   section.name = frame.name;
-  section.x = frame.x - stickySeparation;
-  section.y = frame.y - stickySeparation;
-  section.resizeWithoutConstraints(frame.width + (stickySeparation * 2), frame.height + (stickySeparation * 2));
-  section.fills = [figma.util.solidPaint(figma.constants.colors.figJamBaseLight.lightViolet)];
+  section.x = frame.x;
+  section.y = frame.y;
+  section.resizeWithoutConstraints(frame.width, frame.height);
+  section.fills = [figma.util.solidPaint(color)];
+
+  (frame.children as T[]).forEach(child => section.appendChild(callback ? callback(child) : child));
+  frame.remove();
+
   return section;
 }
 
-export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"]): FrameNode {
+export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separationMultiple: number): FrameNode {
+  const sep = separation * separationMultiple;
   const frame = figma.createFrame();
   frame.layoutMode = layoutMode;
   frame.primaryAxisSizingMode = "AUTO";
   frame.counterAxisSizingMode = "AUTO";
-  frame.itemSpacing = layoutMode == "HORIZONTAL" ? (stickySeparation * 4) : stickySeparation;
+  frame.itemSpacing = sep;
+  frame.counterAxisSpacing = sep;
+  frame.paddingBottom = sep;
+  frame.paddingTop = sep;
+  frame.paddingLeft = sep;
+  frame.paddingRight = sep;
   return frame;
 }
 
 export function transferStickiesToSections(parentFrame: FrameNode) {
-  parentFrame.resizeWithoutConstraints(parentFrame.width, parentFrame.height);
-  parentFrame.layoutMode = "NONE";
-
-  (parentFrame.children as FrameNode[]).forEach((weekFrame) => {
-    weekFrame.layoutMode = "NONE";
-    const weekSection = createSectionFromFrame(weekFrame);
-    weekFrame.children.forEach((sticky) => {
-      weekSection.appendChild(sticky);
-      sticky.x += stickySeparation;
-      sticky.y += stickySeparation;
-    });
-    weekFrame.remove();
-  });
-
-  parentFrame.remove();
+  createSectionFromFrame<FrameNode>(parentFrame, figJamBaseLight.lightGray, monthFrame =>
+    createSectionFromFrame<FrameNode>(monthFrame, figJamBaseLight.lightViolet, weekFrame =>
+      createSectionFromFrame<StickyNode>(weekFrame, figJamBase.violet)
+    )
+  );
 }

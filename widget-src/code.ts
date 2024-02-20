@@ -1,19 +1,38 @@
-import groupBy from "ramda/src/groupBy";
 import getWeek from "date-fns/getWeek";
 
-import { fetchStoriesByEpic, fetchStoriesByPeriod, fetchStoriesByOwnerId } from "./pivotal";
+import { fetchStoriesByEpic, fetchStoriesByPeriod } from "./pivotal";
 import pivotalSticky from "./pivotalSticky";
 import { createFrame, transferStickiesToSections } from "./frame";
 import { loadAllFonts } from "./fonts";
 import { users } from "./users";
 
-const byWeek = groupBy(({ accepted_at }: PivotalStory): string => {
-  if (!accepted_at) return "Not Accepted";
+type StoriesByMonthWeek = {
+  [key: string]: {
+    [key: string]: PivotalStory[]
+  }
+};
 
-  const acceptedAt = new Date(accepted_at);
-  const acceptedAtFormat = Intl.DateTimeFormat("en-US", {month: "short", year: "numeric" }).format(acceptedAt);
-  return `W${getWeek(acceptedAt)} ${acceptedAtFormat}`;
-});
+function byMonthAndWeek(stories: PivotalStory[]): StoriesByMonthWeek  {
+  const result: StoriesByMonthWeek = {};
+
+  for (const story of stories) {
+    if (!story.accepted_at) {
+      result["Not Accepted"] ||= {};
+      result["Not Accepted"]["n/a"] ||= [];
+      result["Not Accepted"]["n/a"].push(story);
+      continue;
+    }
+
+    const acceptedAt = new Date(story.accepted_at);
+    const month = Intl.DateTimeFormat("en-US", {month: "short", year: "numeric" }).format(acceptedAt);
+    const week = `W${getWeek(acceptedAt)}`;
+    result[month] ||= {};
+    result[month][week] ||= [];
+    result[month][week].push(story);
+  }
+
+  return result;
+}
 
 const commands: {[key: string]: (parameters: ParameterValues) => Promise<PivotalStory[]>} = {
   async byEpic(parameters: ParameterValues): Promise<PivotalStory[]> {
@@ -40,17 +59,25 @@ const commands: {[key: string]: (parameters: ParameterValues) => Promise<Pivotal
 figma.on("run", async ({ command, parameters }: RunEvent) => {
   const stories = await commands[command](parameters!);
 
-  const storiesByAcceptedAtWeek: {[key: string]: PivotalStory[]} = byWeek(stories);
+  const storiesByAcceptedAtWeek = byMonthAndWeek(stories);
 
   await loadAllFonts();
 
-  const parentFrame = createFrame("HORIZONTAL");
+  const parentFrame = createFrame("HORIZONTAL", 5);
+  parentFrame.name = "Outception";
 
-  Object.entries(storiesByAcceptedAtWeek).forEach(([week, stories]) => {
-    const weekFrame = createFrame("VERTICAL");
-    weekFrame.name = week;
-    stories.forEach(story => weekFrame.appendChild(pivotalSticky(story)));
-    parentFrame.appendChild(weekFrame);
+  Object.entries(storiesByAcceptedAtWeek).forEach(([month, weeks]) => {
+    const monthFrame = createFrame("HORIZONTAL", 3);
+    monthFrame.name = month;
+
+    Object.entries(weeks).forEach(([week, stories]) => {
+      const weekFrame = createFrame("VERTICAL", 1);
+      weekFrame.name = week;
+      stories.forEach(story => weekFrame.appendChild(pivotalSticky(story)));
+      monthFrame.appendChild(weekFrame);
+    });
+
+    parentFrame.appendChild(monthFrame);
   });
 
   transferStickiesToSections(parentFrame);

@@ -1,5 +1,5 @@
 import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
-import uniq from "ramda/src/uniq";
+
 import { fonts } from "./fonts";
 import Sticky from "./sticky";
 import { usersByPivotalId } from "./users";
@@ -79,7 +79,7 @@ function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: key
 }
 
 function developers({owner_ids, reviews}: PivotalStory, qa: boolean): string[] {
-  const all: number[] = uniq(owner_ids.map(id => id).concat(reviews.map(({reviewer_id}) => reviewer_id)));
+  const all: number[] = Array.from(new Set(owner_ids.map(id => id).concat(reviews.map(({reviewer_id}) => reviewer_id))));
   return all
     .filter(id => usersByPivotalId[id])
     .filter(id => qa === (usersByPivotalId[id].type || "").includes("QA"))
