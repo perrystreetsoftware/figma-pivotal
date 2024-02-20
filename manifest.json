@@ -23,9 +23,12 @@
         "allowFreeform": true
       },
       {
-        "name": "Pivotal Epic ID",
-        "key": "pivotalEpicId",
-        "allowFreeform": true
+        "name": "Pivotal Project",
+        "key": "pivotalProject"
+      },
+      {
+        "name": "Pivotal Epic",
+        "key": "pivotalEpicId"
       }
     ]
   }, {
@@ -39,9 +42,8 @@
         "allowFreeform": true
       },
       {
-        "name": "Pivotal Project ID",
-        "key": "pivotalProjectId",
-        "allowFreeform": true
+        "name": "Pivotal Project",
+        "key": "pivotalProject"
       },
       {
         "name": "Start Date",

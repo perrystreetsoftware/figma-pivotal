@@ -31,7 +31,7 @@ const headers = { "Content-Type": "application/json", "Accept": "application/jso
 
 async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, params: Param): Promise<T[]> {
   let {data, paginate} = await fetchPivotal<T[]>(pivotalToken, path, params);
-  while (paginate!.more) {
+  while (paginate?.more) {
     const nextResponse = await fetchPivotal<T[]>(pivotalToken, path, { ...params, ...paginate!.next });
     data = data.concat(nextResponse.data);
     paginate = nextResponse.paginate;
@@ -57,6 +57,10 @@ async function fetchPivotal<T>(pivotalToken: string, path: String, params: Param
 async function fetchEpic(pivotalToken: string, epicId: number): Promise<PivotalEpic> {
   const { data } = await fetchPivotal<PivotalEpic>(pivotalToken, `epics/${epicId}`, {fields: epicFields});
   return data;
+}
+
+export async function fetchEpics(pivotalToken: string, projectId: number): Promise<PivotalEpic[]> {
+  return fetchPaginatedPivotal<PivotalEpic>(pivotalToken, `projects/${projectId}/epics`, {fields: epicFields});
 }
 
 export async function fetchStoriesByEpic(pivotalToken: string, epicId: number): Promise<PivotalStory[]> {

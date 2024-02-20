@@ -1,8 +1,8 @@
 import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
 
-import { fonts } from "./fonts";
-import Sticky from "./sticky";
-import { usersByPivotalId } from "./users";
+import { fonts } from "../fonts";
+import Sticky from "../sticky";
+import { usersByPivotalId } from "../config";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
