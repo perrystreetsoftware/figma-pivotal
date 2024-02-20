@@ -34,3 +34,20 @@ declare type ByMonthWeek = {
     }
   }
 };
+
+declare type PSSPeriod = {
+  startDate: string,
+  endDate: string,
+  t1: {
+    startDate: string,
+    endDate: string
+  },
+  t2: {
+    startDate: string,
+    endDate: string
+  },
+  t3: {
+    startDate: string,
+    endDate: string
+  }
+}

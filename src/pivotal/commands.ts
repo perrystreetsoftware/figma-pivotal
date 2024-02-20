@@ -28,7 +28,7 @@ export const pivotalCommands: {[key: string]: (parameters: ParameterValues) => P
   async byDate(parameters: ParameterValues): Promise<PivotalStory[]> {
     return fetchStoriesByPeriod(
       parameters!.pivotalToken,
-      teams[parameters!.pivotalProject].pivotal_project_id,
+      parameters!.pivotalProjectId || teams[parameters!.pivotalProject].pivotal_project_id,
       new Date(parameters!.startDate),
       new Date(parameters!.endDate)
     );
@@ -38,7 +38,7 @@ export const pivotalCommands: {[key: string]: (parameters: ParameterValues) => P
     const pivotalId = user.pivotal_id!;
     const stories = await Promise.all(user.pivotal_projects!.map(async (projectName) => {
       const {pivotal_project_id} = teams[projectName];
-      return this.byDate({...parameters, pivotalProjectId: pivotal_project_id.toString()});
+      return this.byDate({...parameters, ...parameters!.period, pivotalProjectId: pivotal_project_id.toString()});
     }));
     return stories.flat().filter(({owner_ids, reviews}) => owner_ids.includes(pivotalId) || reviews.some(({reviewer_id}) => reviewer_id == pivotalId));
   }
