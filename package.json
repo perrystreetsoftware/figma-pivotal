@@ -1,9 +1,9 @@
 {
   "name": "Figma-Pivotal",
   "version": "1.0.0",
-  "description": "Your Figma widget",
+  "description": "Figma plugin to integrate with Pivotal Tracker",
   "scripts": {
-    "build": "esbuild widget-src/code.ts --bundle --outfile=dist/code.js --target=es6",
+    "build": "esbuild src/code.ts --bundle --outfile=dist/code.js --target=es6",
     "tsc": "tsc --noEmit -p widget-src",
     "watch": "npm run build -- --watch"
   },
@@ -11,12 +11,10 @@
   "license": "",
   "devDependencies": {
     "@figma/plugin-typings": "*",
-    "@figma/widget-typings": "*",
     "esbuild": "*",
     "typescript": "*"
   },
   "dependencies": {
-    "@types/ramda": "^0.29.10",
     "date-fns": "^3.3.1"
   }
 }

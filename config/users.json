@@ -179,8 +179,7 @@
     "pivotal_projects": [
       "user",
       "spectrum",
-      "revenue",
-      "design_jared"
+      "revenue"
     ],
     "slack_id": "U063LFZCD2T",
     "type": "DESIGN_QA"
@@ -204,8 +203,7 @@
     "pivotal_id": 3406960,
     "pivotal_projects": [
       "user",
-      "spectrum",
-      "design_jonny"
+      "spectrum"
     ],
     "slack_id": "U018G04QVGW",
     "type": "DESIGN_QA"
@@ -240,8 +238,7 @@
     "pivotal_id": 3423667,
     "pivotal_projects": [
       "bkdr",
-      "revenue",
-      "design_katie"
+      "revenue"
     ],
     "slack_id": "U02L1CADJTH",
     "type": "DESIGN_QA"

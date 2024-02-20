@@ -2,7 +2,7 @@ const separation = 20;
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
-function createSectionFromFrame<T extends SceneNode>(frame: FrameNode, color: string, callback: ((child: T) => SceneNode) | undefined = undefined) : SectionNode {
+function createSectionFromFrame<T extends SceneNode>(frame: FrameNode, color: string, callback: ((child: T) => SceneNode) | undefined = undefined): SectionNode {
   frame.resizeWithoutConstraints(frame.width, frame.height);
   frame.layoutMode = "NONE";
 

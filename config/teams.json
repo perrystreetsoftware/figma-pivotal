@@ -1,0 +1,51 @@
+{
+  "bkdr": {
+    "name": "BKDR",
+    "slack_channel": "C03DP2TJN9M",
+    "pivotal_project_id": 2564753
+  },
+  "ops": {
+    "name": "Dev Ops",
+    "slack_channel": "C013G33RDPA",
+    "pivotal_project_id": 2484953
+  },
+  "pigeon": {
+    "name": "Pigeon",
+    "slack_channel": "C0533CA77L3",
+    "pivotal_project_id": 2639601
+  },
+  "qa": {
+    "name": "QA",
+    "slack_channel": "C02EXHMMW73",
+    "pivotal_project_id": 2536045
+  },
+  "revenue": {
+    "name": "Revenue",
+    "slack_channel": "CTM624TM4",
+    "pivotal_project_id": 2484491
+  },
+  "spectrum": {
+    "name": "Spectrum",
+    "slack_channel": "C0506C09K9D",
+    "pivotal_project_id": 2636024
+  },
+  "client_tech": {
+    "name": "Client Tech",
+    "slack_channel": "C5XGEKN3S",
+    "pivotal_project_id": 2610445
+  },
+  "server_tech": {
+    "name": "Server Tech",
+    "slack_channel": "C02GP6B29K2",
+    "pivotal_project_id": 2608716
+  },
+  "user": {
+    "name": "User",
+    "slack_channel": "CT8653B46",
+    "pivotal_project_id": 2483351
+  },
+  "websites": {
+    "name": "Websites",
+    "pivotal_project_id": 2491133
+  }
+}

@@ -1,10 +1,10 @@
-import getWeek from "date-fns/getWeek";
+import format from "date-fns/format";
 
 import { fetchStoriesByEpic, fetchStoriesByPeriod } from "./pivotal";
 import pivotalSticky from "./pivotalSticky";
 import { createFrame, transferStickiesToSections } from "./frame";
 import { loadAllFonts } from "./fonts";
-import { users } from "./users";
+import { users, teams } from "./users";
 
 type StoriesByMonthWeek = {
   [key: string]: {
@@ -24,8 +24,8 @@ function byMonthAndWeek(stories: PivotalStory[]): StoriesByMonthWeek  {
     }
 
     const acceptedAt = new Date(story.accepted_at);
-    const month = Intl.DateTimeFormat("en-US", {month: "short", year: "numeric" }).format(acceptedAt);
-    const week = `W${getWeek(acceptedAt)}`;
+    const month = format(acceptedAt, "MMM yyyy");
+    const week = `W${format(acceptedAt, "w")}`;
     result[month] ||= {};
     result[month][week] ||= [];
     result[month][week].push(story);
@@ -50,11 +50,22 @@ const commands: {[key: string]: (parameters: ParameterValues) => Promise<Pivotal
     );
   },
   async byOwner(parameters: ParameterValues): Promise<PivotalStory[]> {
-    const pivotalId = users[parameters!.pivotalOwner].pivotal_id!;
-    const stories = await this.byDate(parameters);
-    return stories.filter(({owner_ids, reviews}) => owner_ids.includes(pivotalId) || reviews.some(({reviewer_id}) => reviewer_id == pivotalId));
+    const user = users[parameters!.owner];
+    const pivotalId = user.pivotal_id!;
+    const stories = await Promise.all(user.pivotal_projects!.map(async (projectName) => {
+      const {pivotal_project_id} = teams[projectName];
+      return this.byDate({...parameters, pivotalProjectId: pivotal_project_id.toString()});
+    }));
+    return stories.flat().filter(({owner_ids, reviews}) => owner_ids.includes(pivotalId) || reviews.some(({reviewer_id}) => reviewer_id == pivotalId));
   }
 };
+
+figma.parameters.on("input", ({ key, query, result }: ParameterInputEvent) => {
+  if (key === "owner") {
+      const owners = Object.keys(users);
+      result.setSuggestions(owners.filter(s => s.includes(query)));
+  }
+});
 
 figma.on("run", async ({ command, parameters }: RunEvent) => {
   const stories = await commands[command](parameters!);

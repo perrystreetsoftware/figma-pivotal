@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "figma.widget.h",
-    "jsxFragmentFactory": "figma.widget.Fragment",
     "target": "es2020",
     "lib": [
       "es2020"

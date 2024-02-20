@@ -1,6 +1,6 @@
 {
   "name": "Figma-Pivotal",
-  "id": "1336799490097842881",
+  "id": "1341621955117733447",
   "api": "1.0.0",
   "main": "dist/code.js",
   "editorType": [
@@ -15,6 +15,7 @@
   "menu": [{
     "name": "By Epic",
     "command": "byEpic",
+    "parameterOnly": true,
     "parameters": [
       {
         "name": "Pivotal API Token",
@@ -30,6 +31,7 @@
   }, {
     "name": "By Date",
     "command": "byDate",
+    "parameterOnly": true,
     "parameters": [
       {
         "name": "Pivotal API Token",
@@ -55,6 +57,7 @@
   }, {
     "name": "By Owner",
     "command": "byOwner",
+    "parameterOnly": true,
     "parameters": [
       {
         "name": "Pivotal API Token",
@@ -73,8 +76,7 @@
       },
       {
         "name": "Owner",
-        "key": "owner",
-        "allowFreeform": true
+        "key": "owner"
       }
     ]
   }]

@@ -2,7 +2,7 @@ type Param = { [key: string]: string | number| boolean };
 
 type PivotalResponseEnvelope<T> = {
   data: T,
-  pagination: {
+  pagination?: {
     total: number,
     limit: number,
     offset: number
@@ -12,7 +12,7 @@ type PivotalResponseEnvelope<T> = {
 
 type Response<T> = {
   data: T,
-  paginate: {
+  paginate?: {
     more: boolean,
     next: {
       offset: number,
@@ -31,8 +31,8 @@ const headers = { "Content-Type": "application/json", "Accept": "application/jso
 
 async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, params: Param): Promise<T[]> {
   let {data, paginate} = await fetchPivotal<T[]>(pivotalToken, path, params);
-  while (paginate.more) {
-    const nextResponse = await fetchPivotal<T[]>(pivotalToken, path, { ...params, ...paginate.next });
+  while (paginate!.more) {
+    const nextResponse = await fetchPivotal<T[]>(pivotalToken, path, { ...params, ...paginate!.next });
     data = data.concat(nextResponse.data);
     paginate = nextResponse.paginate;
   }
@@ -41,15 +41,17 @@ async function fetchPaginatedPivotal<T>(pivotalToken: string, path: String, para
 async function fetchPivotal<T>(pivotalToken: string, path: String, params: Param): Promise<Response<T>> {
   const url = `https://www.pivotaltracker.com/services/v5/${path}?${paramsToString({ token: pivotalToken, envelope: true, ...params })}`;
   const response = await fetch(url, { headers });
-  const { data, pagination: { offset, limit, total } }: PivotalResponseEnvelope<T> = await response.json();
+  const { data, pagination }: PivotalResponseEnvelope<T> = await response.json();
+  let result: Response<T> = { data };
 
-  return {
-    data,
-    paginate: {
-      more: (offset + limit) < total,
-      next: { offset: offset + limit, limit }
-    }
-  };
+  if (pagination) {
+    result.paginate = {
+      more: (pagination.offset + pagination.limit) < pagination.total,
+      next: { offset: pagination.offset + pagination.limit, limit: pagination.limit }
+    };
+  }
+
+  return result;
 }
 
 async function fetchEpic(pivotalToken: string, epicId: number): Promise<PivotalEpic> {
@@ -59,7 +61,7 @@ async function fetchEpic(pivotalToken: string, epicId: number): Promise<PivotalE
 
 export async function fetchStoriesByEpic(pivotalToken: string, epicId: number): Promise<PivotalStory[]> {
   const epic = await fetchEpic(pivotalToken, epicId);
-  const params = { with_label: encodeURI(epic.label.name), fields: storyFields}
+  const params = { with_label: epic.label.name, fields: storyFields}
   return fetchPaginatedPivotal<PivotalStory>(pivotalToken, `projects/${epic.project_id}/stories`, params);
 }
 

@@ -68,3 +68,9 @@ declare type PSSUser = {
   github_emails?: string[],
   type?: "SERVER" | "ANDROID" | "IOS" | "WEB" | "PRODUCT_QA" | "DEV_QA" | "DESIGN_QA"
 }
+
+declare type PSSTeam = {
+  name: string,
+  slack_channel: string,
+  pivotal_project_id: number
+}
