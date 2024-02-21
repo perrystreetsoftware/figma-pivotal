@@ -12,12 +12,10 @@ function createSectionFromFrame(frame: FrameNode, color: string): SectionNode {
   return section;
 }
 
-function moveChildrenFromFrameToSection<T extends SceneNode>(frame: FrameNode, callback: (scene: T) => void) {
+function* iterateChildrenAndRemoveFrame<T extends SceneNode>(frame: FrameNode): Generator<T, void, undefined> {
   frame.resizeWithoutConstraints(frame.width, frame.height);
   frame.layoutMode = "NONE";
-
-  (frame.children as T[]).forEach(callback);
-
+  yield* frame.children as T[];
   frame.remove();
 }
 
@@ -39,21 +37,21 @@ export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separatio
 export function transferStickiesToSections(parentFrame: FrameNode) {
   const parentSection = createSectionFromFrame(parentFrame, figJamBaseLight.lightGray);
 
-  moveChildrenFromFrameToSection<FrameNode>(parentFrame, (monthFrame) => {
+  for (const monthFrame of iterateChildrenAndRemoveFrame<FrameNode>(parentFrame)) {
     const monthSection = createSectionFromFrame(monthFrame, figJamBaseLight.lightViolet);
     parentSection.appendChild(monthSection);
 
-    moveChildrenFromFrameToSection<FrameNode>(monthFrame, (weekFrame) => {
+    for (const weekFrame of iterateChildrenAndRemoveFrame<FrameNode>(monthFrame)) {
       const weekSection = createSectionFromFrame(weekFrame, figJamBase.violet);
       monthSection.appendChild(weekSection);
 
-      moveChildrenFromFrameToSection<FrameNode>(weekFrame, (storiesOrCommitsFrame) => {
-        moveChildrenFromFrameToSection<StickyNode>(storiesOrCommitsFrame, sticky => {
+      for (const storiesOrCommitsFrame of iterateChildrenAndRemoveFrame<FrameNode>(weekFrame)) {
+        for (const sticky of iterateChildrenAndRemoveFrame<StickyNode>(storiesOrCommitsFrame)) {
           sticky.x += storiesOrCommitsFrame.x;
           sticky.y += storiesOrCommitsFrame.y;
           weekSection.appendChild(sticky)
-        });
-      });
-    });
-  });
+        }
+      }
+    }
+  }
 }
