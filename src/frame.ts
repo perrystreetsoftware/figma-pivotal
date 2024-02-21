@@ -2,7 +2,10 @@ const separation = 20;
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
-function createSectionFromFrame<T extends SceneNode>(frame: FrameNode, color: string, callback: ((child: T) => SceneNode) | undefined = undefined): SectionNode {
+type A = (node: FrameNode) => SceneNode;
+type B = (node: FrameNode, section: SectionNode) => void;
+
+function createSectionFromFrame(frame: FrameNode, color: string, callbackA?: A, callbackB?: B): SectionNode {
   frame.resizeWithoutConstraints(frame.width, frame.height);
   frame.layoutMode = "NONE";
 
@@ -13,10 +16,24 @@ function createSectionFromFrame<T extends SceneNode>(frame: FrameNode, color: st
   section.resizeWithoutConstraints(frame.width, frame.height);
   section.fills = [figma.util.solidPaint(color)];
 
-  (frame.children as T[]).forEach(child => section.appendChild(callback ? callback(child) : child));
+  (frame.children as FrameNode[]).forEach(child => callbackA ? section.appendChild(callbackA(child)) : callbackB!(child, section));
+
   frame.remove();
 
   return section;
+}
+
+function removeStickies(frame: FrameNode, section: SectionNode) {
+  frame.resizeWithoutConstraints(frame.width, frame.height);
+  frame.layoutMode = "NONE";
+
+  (frame.children as StickyNode[]).forEach(sticky => {
+    sticky.x += frame.x;
+    sticky.y += frame.y;
+    section.appendChild(sticky)
+  });
+
+  frame.remove();
 }
 
 export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separationMultiple: number): FrameNode {
@@ -35,9 +52,11 @@ export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separatio
 }
 
 export function transferStickiesToSections(parentFrame: FrameNode) {
-  createSectionFromFrame<FrameNode>(parentFrame, figJamBaseLight.lightGray, monthFrame =>
-    createSectionFromFrame<FrameNode>(monthFrame, figJamBaseLight.lightViolet, weekFrame =>
-      createSectionFromFrame<StickyNode>(weekFrame, figJamBase.violet)
+  createSectionFromFrame(parentFrame, figJamBaseLight.lightGray, (monthFrame) =>
+    createSectionFromFrame(monthFrame, figJamBaseLight.lightViolet, (weekFrame) =>
+      createSectionFromFrame(weekFrame, figJamBase.violet, undefined, (storyOrCommitFrame, section) => 
+        removeStickies(storyOrCommitFrame, section)
+      )
     )
-  );
+  )
 }

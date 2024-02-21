@@ -8,9 +8,10 @@
   ],
   "networkAccess": {
     "allowedDomains": [
-      "https://www.pivotaltracker.com"
+      "https://www.pivotaltracker.com",
+      "https://api.github.com/graphql"  
     ],
-    "reasoning": "We need to access Pivotal Tracker to fetch the stories and epics"
+    "reasoning": "We need to access Pivotal Tracker to fetch the stories and epics. We need access to Github to fetch the repos and commits."
   },
   "menu": [{
     "name": "By Epic",
@@ -64,6 +65,16 @@
       {
         "name": "Pivotal API Token",
         "key": "pivotalToken",
+        "allowFreeform": true
+      },
+      {
+        "name": "Github Username",
+        "key": "githubUsername",
+        "allowFreeform": true
+      },
+      {
+        "name": "Github Personal Access Token",
+        "key": "githubPAT",
         "allowFreeform": true
       },
       {

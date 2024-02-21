@@ -30,7 +30,7 @@ declare type ByMonthWeek = {
   [key: string]: {
     [key: string]: {
       stories: PivotalStory[],
-      prs: GithubPr[]
+      commits: GithubCommit[]
     }
   }
 };

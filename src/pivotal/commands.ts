@@ -1,30 +1,11 @@
-import format from "date-fns/format";
-
 import { fetchStoriesByEpic, fetchStoriesByPeriod } from "./fetch";
 import { users, teams } from "../config";
 
-export function groupPivotalByMonthAndWeek(result: ByMonthWeek, stories: PivotalStory[])  {
-  for (const story of stories) {
-    if (!story.accepted_at) {
-      result["Not Accepted"] ||= {};
-      result["Not Accepted"]["n/a"] ||= {stories: [], prs: []};
-      result["Not Accepted"]["n/a"].stories.push(story);
-      continue;
-    }
-
-    const acceptedAt = new Date(story.accepted_at);
-    const month = format(acceptedAt, "MMM yyyy");
-    const week = `W${format(acceptedAt, "w")}`;
-    result[month] ||= {};
-    result[month][week] ||= {stories: [], prs: []};
-    result[month][week].stories.push(story);
-  }
-}
-
-export const pivotalCommands: {[key: string]: (parameters: ParameterValues) => Promise<PivotalStory[]>} = {
+export default {
   async byEpic(parameters: ParameterValues): Promise<PivotalStory[]> {
     return fetchStoriesByEpic(parameters!.pivotalToken, parameters!.pivotalEpicId);
   },
+
   async byDate(parameters: ParameterValues): Promise<PivotalStory[]> {
     return fetchStoriesByPeriod(
       parameters!.pivotalToken,
@@ -33,6 +14,7 @@ export const pivotalCommands: {[key: string]: (parameters: ParameterValues) => P
       new Date(parameters!.endDate)
     );
   },
+
   async byOwner(parameters: ParameterValues): Promise<PivotalStory[]> {
     const user = users[parameters!.owner];
     const pivotalId = user.pivotal_id!;
@@ -42,4 +24,4 @@ export const pivotalCommands: {[key: string]: (parameters: ParameterValues) => P
     }));
     return stories.flat().filter(({owner_ids, reviews}) => owner_ids.includes(pivotalId) || reviews.some(({reviewer_id}) => reviewer_id == pivotalId));
   }
-};
+} as {[key: string]: (parameters: ParameterValues) => Promise<PivotalStory[]>};

@@ -1,4 +1,4 @@
-declare type GithubPr = {
+declare type GithubPullRequest = {
   id: number,
   title: string,
   url: string,
@@ -9,3 +9,24 @@ declare type GithubPr = {
     login: string
   }
 }
+
+declare type GithubRepo = {
+  name: string
+}
+
+declare type GithubCommit = {
+  authors: {
+    author: {
+      email: string,
+      name: string,
+    }[]
+  }
+  repository: GithubRepo,
+  additions: number,
+  deletions: number,
+  changedFilesIfAvailable: number,
+  message: string,
+  messageHeadline: string,
+  commitUrl: string,
+  authoredDate: string
+};
