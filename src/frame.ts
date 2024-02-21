@@ -2,36 +2,21 @@ const separation = 20;
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
-type A = (node: FrameNode) => SceneNode;
-type B = (node: FrameNode, section: SectionNode) => void;
-
-function createSectionFromFrame(frame: FrameNode, color: string, callbackA?: A, callbackB?: B): SectionNode {
-  frame.resizeWithoutConstraints(frame.width, frame.height);
-  frame.layoutMode = "NONE";
-
+function createSectionFromFrame(frame: FrameNode, color: string): SectionNode {
   const section = figma.createSection();
   section.name = frame.name;
   section.x = frame.x;
   section.y = frame.y;
   section.resizeWithoutConstraints(frame.width, frame.height);
   section.fills = [figma.util.solidPaint(color)];
-
-  (frame.children as FrameNode[]).forEach(child => callbackA ? section.appendChild(callbackA(child)) : callbackB!(child, section));
-
-  frame.remove();
-
   return section;
 }
 
-function removeStickies(frame: FrameNode, section: SectionNode) {
+function moveChildrenFromFrameToSection<T extends SceneNode>(frame: FrameNode, callback: (scene: T) => void) {
   frame.resizeWithoutConstraints(frame.width, frame.height);
   frame.layoutMode = "NONE";
 
-  (frame.children as StickyNode[]).forEach(sticky => {
-    sticky.x += frame.x;
-    sticky.y += frame.y;
-    section.appendChild(sticky)
-  });
+  (frame.children as T[]).forEach(callback);
 
   frame.remove();
 }
@@ -52,11 +37,23 @@ export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separatio
 }
 
 export function transferStickiesToSections(parentFrame: FrameNode) {
-  createSectionFromFrame(parentFrame, figJamBaseLight.lightGray, (monthFrame) =>
-    createSectionFromFrame(monthFrame, figJamBaseLight.lightViolet, (weekFrame) =>
-      createSectionFromFrame(weekFrame, figJamBase.violet, undefined, (storyOrCommitFrame, section) => 
-        removeStickies(storyOrCommitFrame, section)
-      )
-    )
-  )
+  const parentSection = createSectionFromFrame(parentFrame, figJamBaseLight.lightGray);
+
+  moveChildrenFromFrameToSection<FrameNode>(parentFrame, (monthFrame) => {
+    const monthSection = createSectionFromFrame(monthFrame, figJamBaseLight.lightViolet);
+    parentSection.appendChild(monthSection);
+
+    moveChildrenFromFrameToSection<FrameNode>(monthFrame, (weekFrame) => {
+      const weekSection = createSectionFromFrame(weekFrame, figJamBase.violet);
+      monthSection.appendChild(weekSection);
+
+      moveChildrenFromFrameToSection<FrameNode>(weekFrame, (storiesOrCommitsFrame) => {
+        moveChildrenFromFrameToSection<StickyNode>(storiesOrCommitsFrame, sticky => {
+          sticky.x += storiesOrCommitsFrame.x;
+          sticky.y += storiesOrCommitsFrame.y;
+          weekSection.appendChild(sticky)
+        });
+      });
+    });
+  });
 }
