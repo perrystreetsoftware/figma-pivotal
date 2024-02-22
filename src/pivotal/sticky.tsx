@@ -1,7 +1,7 @@
 import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
 
 import { fonts } from "../fonts";
-import Sticky from "../sticky";
+import { Sticky, Text, Br } from "../sticky";
 import { usersByPivotalId } from "../config";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
@@ -65,17 +65,18 @@ function toSentence(parts: string[]): string {
   return parts.join(', ').replace(/,\s([^,]+)$/, ', and $1');
 }
 
-function cycleTimeDetails(sticky: Sticky, story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails) {
+function cycleTimeDetails(story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails) {
   if (story.cycle_time_details[cycleTimeKey] <= 0) return;
 
-  sticky.text("\n")
-  sticky.textWithFormatting(() => {
-    sticky.textWithFormatting(`${cycleTimeHeaders[cycleTimeKey]}: `, {fontName: fonts.interItalic});
-    sticky.textWithFormatting(formatDuration(story.cycle_time_details[cycleTimeKey]), {fill: cycleTimeThresholdColor(story, cycleTimeKey)});
-    if (cycleTimeKey === "started_time" || cycleTimeKey === "delivered_time") {
-      sticky.textWithFormatting(` by ${toSentence(developers(story, cycleTimeKey === "delivered_time"))}`, {fontSize: 10});
-    }
-  }, {listType: "UNORDERED"});
+  return (
+    <Text key={cycleTimeKey} format={{listType: "UNORDERED"}} newLine>
+      <Text format={{fontName: fonts.interItalic}}>{cycleTimeHeaders[cycleTimeKey]}: </Text>
+      <Text format={{fill: cycleTimeThresholdColor(story, cycleTimeKey)}}>{formatDuration(story.cycle_time_details[cycleTimeKey])}</Text>
+      {(cycleTimeKey === "started_time" || cycleTimeKey === "delivered_time") && 
+        <Text format={{fontSize: 10}}> by {toSentence(developers(story, cycleTimeKey === "delivered_time"))}</Text>
+      }
+    </Text>
+  );
 }
 
 function developers({owner_ids, reviews}: PivotalStory, qa: boolean): string[] {
@@ -87,38 +88,35 @@ function developers({owner_ids, reviews}: PivotalStory, qa: boolean): string[] {
 }
 
 export default function pivotalSticky(story: PivotalStory): StickyNode {
-  const sticky = new Sticky();
-  
-  sticky.text(`${storyTypeEmoji[story.story_type]} `);
-  sticky.textWithFormatting(story.name.replace(releaseLinkRegex, ""), {fontName: fonts.interBold, url: story.url});
-  sticky.text("\n");
-
-  if (story.story_type === "feature") {
-    sticky.text("\n");
-    sticky.textWithFormatting(() => {
-      sticky.textWithFormatting("Estimate: ", {fontName: fonts.interItalic});
-      sticky.text(`${story.estimate}`);
-    }, {listType: "UNORDERED"});
-  }
-
   const cycleTimesToDisplay: (keyof PivotalCycleTimeDetails)[] = ["started_time", "finished_time", "delivered_time", "rejected_time"];
-  cycleTimesToDisplay.forEach(cycleTimeKey => cycleTimeDetails(sticky, story, cycleTimeKey));
+  const cycleTimes = cycleTimesToDisplay.map(cycleTimeKey => cycleTimeDetails(story, cycleTimeKey)).filter(cycleTime => cycleTime);
 
-  if (story.labels.length > 0) {
-    sticky.text("\n");
-    sticky.textWithFormatting(() => {
-      sticky.text("\n| ");
-      story.labels.forEach(({name}) => {
-        const url = `https://www.pivotaltracker.com/n/projects/${story.project_id}/search?q=${encodeURI(`label:"${name}"`)}`;
-        sticky.textWithFormatting(name, {fill: figJamBase.green, url});
-        sticky.text(" | ");
-      });
-    }, {lineHeight: 15, fontSize: 10});
-  }
+  return (
+    <Sticky fill={storyTypeColor[story.story_type]}>
+      <Text>{`${storyTypeEmoji[story.story_type]} `}</Text>
+      <Text format={{fontName: fonts.interBold, url: story.url}} newLine>{story.name.replace(releaseLinkRegex, "")}</Text>
+      <Br />
 
-  sticky.fill(storyTypeColor[story.story_type]);
-  sticky.setPluginData("pivotalStory", JSON.stringify(story));
-  sticky.authorVisible(false);
+      {story.story_type === "feature" && 
+        <Text format={{listType: "UNORDERED"}}>
+          <Text format={{fontName: fonts.interItalic}}>Estimate: </Text>
+          <Text newLine>{story.estimate.toLocaleString()}</Text>
+        </Text>
+      }
 
-  return sticky.getNode();
+      {cycleTimes}
+
+      {story.labels.length > 0 &&
+        <Text format={{lineHeight: 15, fontSize: 10}} newLine>
+          <Br />
+          {story.labels.map(({name}) => (
+            <Text key={name}>
+              <Text format={{fill: figJamBase.green, url: `https://www.pivotaltracker.com/n/projects/${story.project_id}/search?q=${encodeURI(`label:"${name}"`)}`}}>{name}</Text>
+              <Text>{" | "}</Text>
+            </Text>
+          ))}
+        </Text>
+      }
+    </Sticky>
+  );
 }

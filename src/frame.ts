@@ -12,25 +12,20 @@ function createSectionFromFrame(frame: FrameNode, color: string): SectionNode {
   return section;
 }
 
-function* iterateChildrenAndRemoveFrame<T extends SceneNode>(frame: FrameNode): Generator<T, void, undefined> {
+function* iterateChildrenAndRemoveFrame<ChildType extends SceneNode>(frame: FrameNode): Generator<ChildType, void, undefined> {
   frame.resizeWithoutConstraints(frame.width, frame.height);
   frame.layoutMode = "NONE";
-  yield* frame.children as T[];
+  yield* frame.children as ChildType[];
   frame.remove();
 }
 
-export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separationMultiple: number): FrameNode {
-  const sep = separation * separationMultiple;
+export function createFrame(layoutMode: AutoLayoutMixin["layoutMode"], separationMultiple: number, name: string): FrameNode {
+  const separationWithMultiplier = separation * separationMultiple;
   const frame = figma.createFrame();
   frame.layoutMode = layoutMode;
-  frame.primaryAxisSizingMode = "AUTO";
-  frame.counterAxisSizingMode = "AUTO";
-  frame.itemSpacing = sep;
-  frame.counterAxisSpacing = sep;
-  frame.paddingBottom = sep;
-  frame.paddingTop = sep;
-  frame.paddingLeft = sep;
-  frame.paddingRight = sep;
+  frame.primaryAxisSizingMode = frame.counterAxisSizingMode = "AUTO";
+  frame.itemSpacing = frame.counterAxisSpacing = frame.paddingBottom = frame.paddingTop = frame.paddingLeft = frame.paddingRight = separationWithMultiplier;
+  frame.name = name
   return frame;
 }
 
@@ -46,10 +41,11 @@ export function transferStickiesToSections(parentFrame: FrameNode) {
       monthSection.appendChild(weekSection);
 
       for (const storiesOrCommitsFrame of iterateChildrenAndRemoveFrame<FrameNode>(weekFrame)) {
+
         for (const sticky of iterateChildrenAndRemoveFrame<StickyNode>(storiesOrCommitsFrame)) {
           sticky.x += storiesOrCommitsFrame.x;
           sticky.y += storiesOrCommitsFrame.y;
-          weekSection.appendChild(sticky)
+          weekSection.appendChild(sticky);
         }
       }
     }

@@ -59,28 +59,23 @@ figma.on("run", async ({ command, parameters }: RunEvent) => {
 
   await loadAllFonts();
 
-  const parentFrame = createFrame("HORIZONTAL", 5);
-  parentFrame.name = title[command](parameters!);
+  const parentFrame = createFrame("HORIZONTAL", 5, title[command](parameters!));
 
   Object.keys(storiesAndCommits).sort().forEach(month => {
-    const monthFrame = createFrame("HORIZONTAL", 3);
-    monthFrame.name = month;
+    const monthFrame = createFrame("HORIZONTAL", 3, month);
 
     Object.keys(storiesAndCommits[month]).sort().forEach((week) => {
       const {stories, commits} = storiesAndCommits[month][week];
-      const weekFrame = createFrame("HORIZONTAL", 2);
-      weekFrame.name = week;
+      const weekFrame = createFrame("HORIZONTAL", 2, week);
 
       if (stories.length > 0) {
-        const weekStoriesFrame = createFrame("VERTICAL", 1);
-        weekStoriesFrame.name = "Stories";
+        const weekStoriesFrame = createFrame("VERTICAL", 1, "Stories");
         weekFrame.appendChild(weekStoriesFrame);
         stories.forEach(story => weekStoriesFrame.appendChild(pivotalSticky(story)));
       }
 
       if (commits.length > 0) {
-        const weekCommitsFrame = createFrame("VERTICAL", 1);
-        weekCommitsFrame.name = "Commits";
+        const weekCommitsFrame = createFrame("VERTICAL", 1, "Commits");
         weekFrame.appendChild(weekCommitsFrame);
         commits.forEach(commit => weekCommitsFrame.appendChild(githubSticky(commit)));
       }
