@@ -1,14 +1,14 @@
 import { Sticky, Text, Br } from "../sticky";
 import { fonts } from "../fonts";
 
-const { figJamBaseLight, figJamBase } = figma.constants.colors;
+const { figJamBase } = figma.constants.colors;
 
 function toSentence(parts: string[]): string {
   if (parts.length == 2) return parts.join(' and ');
   return parts.join(', ').replace(/,\s([^,]+)$/, ', and $1');
 }
 
-export default function githubSticky(commit: GithubCommit): StickyNode {
+export default function GithubSticky({commit}: {commit: GithubCommit}): StickyNode {
   return (
     <Sticky fill={figJamBase.white}>
       <Text format={{ fontName: fonts.interBold, url: commit.commitUrl }} newLine>{commit.messageHeadline}</Text>

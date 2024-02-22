@@ -26,12 +26,14 @@ declare type PSSTeam = {
   pivotal_project_id: number
 }
 
+declare type StoryCommits = {
+  stories: PivotalStory[],
+  commits: GithubCommit[]
+}
+
 declare type ByMonthWeek = {
   [key: string]: {
-    [key: string]: {
-      stories: PivotalStory[],
-      commits: GithubCommit[]
-    }
+    [key: string]: StoryCommits
   }
 };
 

@@ -87,7 +87,7 @@ function developers({owner_ids, reviews}: PivotalStory, qa: boolean): string[] {
     .map(id => usersByPivotalId[id].name!);
 }
 
-export default function pivotalSticky(story: PivotalStory): StickyNode {
+export default function PivotalSticky({story}: {story: PivotalStory}): StickyNode {
   const cycleTimesToDisplay: (keyof PivotalCycleTimeDetails)[] = ["started_time", "finished_time", "delivered_time", "rejected_time"];
   const cycleTimes = cycleTimesToDisplay.map(cycleTimeKey => cycleTimeDetails(story, cycleTimeKey)).filter(cycleTime => cycleTime);
 
@@ -112,7 +112,7 @@ export default function pivotalSticky(story: PivotalStory): StickyNode {
           {story.labels.map(({name}) => (
             <Text key={name}>
               <Text format={{fill: figJamBase.green, url: `https://www.pivotaltracker.com/n/projects/${story.project_id}/search?q=${encodeURI(`label:"${name}"`)}`}}>{name}</Text>
-              <Text>{" | "}</Text>
+              <Text> | </Text>
             </Text>
           ))}
         </Text>

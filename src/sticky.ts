@@ -1,40 +1,56 @@
-type TextProps = (string | Function)[] | string | Function;
+type TextComponent = FunctionalWidget<TextProps>;
+type StickyChildCallback = (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => void
 
-type StickyProps = (Function | boolean)[] | Function | boolean;
+type TextProps = {
+  children: FigmaDeclarativeChildren<TextComponent>,
+  format?: FigmaTextFormat["format"],
+  newLine?: boolean
+}
+
+type StickyProps = {
+  children: FigmaDeclarativeChildren<TextComponent>,
+  fill: string
+}
 
 export function Br() {
   return (sticky: StickyNode) => sticky.text.characters += "\n";
 }
 
-export function Text({ children, format, newLine = false }: { children: TextProps; format?: FigmaTextFormat["format"], newLine?: boolean}) {
+function isStickyChildCallback(child: any): child is StickyChildCallback {
+  return typeof child === "function";
+}
+
+export function Text({ children, format, newLine = false }: TextProps): StickyChildCallback {
   return (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => {
     const start = sticky.text.characters.length;
-    children.flat().forEach((child) => {
-      if (typeof child === "string") {
-        sticky.text.characters += child;
-      } else if (typeof child === "function") {
-        child(sticky, stickyFormatting);
-      } else {
-        console.log("else child text", child);
-      }
-    });
+
+    if (Array.isArray(children)) {
+      children.flat().forEach((child) => {
+        if (typeof child === "string") {
+          sticky.text.characters += child;
+        } else if (isStickyChildCallback(child)) {
+          child(sticky, stickyFormatting);
+        }
+      });
+    }
+
     const end = sticky.text.characters.length;
     if (newLine) sticky.text.characters += "\n";
     if (format) stickyFormatting.push({ start, end, format });
   };
 }
 
-export function Sticky({children, fill}: {children: StickyProps, fill: string}): StickyNode {
+export function Sticky({children, fill}: StickyProps): StickyNode {
   const sticky = figma.createSticky();
   const stickyFormatting: FigmaTextFormat[] = [];
 
-  children.flat().forEach((child) => {
-    if (typeof child === "function") {
-      child(sticky, stickyFormatting)
-    } else {
-      console.log("else child sticky", child);
-    }
-  });
+  if (Array.isArray(children)) {
+    children.flat().forEach((child) => {
+      if (isStickyChildCallback(child)) {
+        child(sticky, stickyFormatting)
+      }
+    });
+  }
 
   stickyFormatting.forEach(({ start, end, format }) => {
     if (format.url) sticky.text.setRangeHyperlink(start, end, {type: "URL", value: format.url});
