@@ -67,5 +67,5 @@ export function FrameToSection({children}: {children: FrameNode[]}) {
   const frame = children[0] as FrameNode;
   const section = createSectionFromFrame(frame);
   walkNodeTree(frame, section);
-  section.findAllWithCriteria({types: ["SECTION"], pluginData: {keys: ["group"]}}).forEach(section => figma.ungroup(section));
+  section.findAllWithCriteria({types: ["SECTION"], pluginData: {keys: ["group"]}}).forEach(figma.ungroup);
 }

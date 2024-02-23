@@ -1,4 +1,5 @@
 type TextComponent = FunctionalWidget<TextProps>;
+
 type StickyChildCallback = (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => void
 
 type TextProps = {
@@ -13,12 +14,9 @@ type StickyProps = {
   narrow?: boolean
 }
 
-
 const isStickyChildCallback = (child: any): child is StickyChildCallback => typeof child === "function";
 
-export function Br(): StickyChildCallback {
-  return (sticky: StickyNode) => sticky.text.characters += "\n";
-}
+export const Br: StickyChildCallback = (sticky: StickyNode) => sticky.text.characters += "\n";
 
 export function Text({ children, format, newLine = false }: TextProps): StickyChildCallback {
   return (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => {
@@ -50,14 +48,14 @@ export function Sticky({children, fill, narrow = false}: StickyProps): StickyNod
     }
   }
 
-  stickyFormatting.forEach(({ start, end, format }) => {
+  for (const { start, end, format } of stickyFormatting) {
     if (format.url) sticky.text.setRangeHyperlink(start, end, {type: "URL", value: format.url});
     if (format.fontName) sticky.text.setRangeFontName(start, end, format.fontName);
     if (format.fill) sticky.text.setRangeFills(start, end, [figma.util.solidPaint(format.fill)]);
     if (format.fontSize) sticky.text.setRangeFontSize(start, end, format.fontSize);
     if (format.listType) sticky.text.setRangeListOptions(start, end, { type: format.listType });
     if (format.lineHeight) sticky.text.setRangeLineHeight(start, end, {unit: "PIXELS", value: format.lineHeight});
-  });
+  }
 
   sticky.authorVisible = false;
   sticky.fills = [figma.util.solidPaint(fill)];
