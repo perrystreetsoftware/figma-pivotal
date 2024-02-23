@@ -46,6 +46,7 @@
   },
   "websites": {
     "name": "Websites",
+    "slack_channel": "C06JN529FD1",
     "pivotal_project_id": 2491133
   }
 }

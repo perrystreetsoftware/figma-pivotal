@@ -11,6 +11,10 @@
     "typeRoots": [
       "../node_modules/@types",
       "../node_modules/@figma"
-    ]
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   }
 }

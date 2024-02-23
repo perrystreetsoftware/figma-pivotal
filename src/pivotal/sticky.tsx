@@ -1,8 +1,8 @@
 import { millisecondsInHour, millisecondsInDay } from "date-fns/constants";
 
 import { fonts } from "../fonts";
-import { Sticky, Text, Br } from "../sticky";
-import { usersByPivotalId } from "../config";
+import { Sticky, Text, Br } from "../components/sticky";
+import { usersByPivotalId } from "../config/config";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
@@ -81,10 +81,7 @@ function cycleTimeDetails(story: PivotalStory, cycleTimeKey: keyof PivotalCycleT
 
 function developers({owner_ids, reviews}: PivotalStory, qa: boolean): string[] {
   const all: number[] = Array.from(new Set(owner_ids.map(id => id).concat(reviews.map(({reviewer_id}) => reviewer_id))));
-  return all
-    .filter(id => usersByPivotalId[id])
-    .filter(id => qa === (usersByPivotalId[id].type || "").includes("QA"))
-    .map(id => usersByPivotalId[id].name!);
+  return all.filter(id => qa === (usersByPivotalId[id].type || "").includes("QA")).map(id => usersByPivotalId[id].name);
 }
 
 export default function PivotalSticky({story}: {story: PivotalStory}): StickyNode {
@@ -93,7 +90,7 @@ export default function PivotalSticky({story}: {story: PivotalStory}): StickyNod
 
   return (
     <Sticky fill={storyTypeColor[story.story_type]}>
-      <Text>{`${storyTypeEmoji[story.story_type]} `}</Text>
+      <Text>{storyTypeEmoji[story.story_type]} </Text>
       <Text format={{fontName: fonts.interBold, url: story.url}} newLine>{story.name.replace(releaseLinkRegex, "")}</Text>
       <Br />
 

@@ -1,4 +1,4 @@
-import { Sticky, Text, Br } from "../sticky";
+import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;

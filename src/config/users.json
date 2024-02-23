@@ -59,7 +59,10 @@
     "pivotal_projects": [
       "user",
       "spectrum",
-      "revenue"
+      "revenue",
+      "bkdr",
+      "pigeon",
+      "ops"
     ],
     "slack_id": "U062LBWKNH4",
     "type": "PRODUCT_QA"
@@ -421,7 +424,16 @@
   "scott": {
     "name": "Scott Russell",
     "pivotal_id": 3377451,
-    "slack_id": "U04911Y9D"
+    "slack_id": "U04911Y9D",
+    "type": "PRODUCT_QA",
+    "pivotal_projects": [
+      "user",
+      "spectrum",
+      "revenue",
+      "bkdr",
+      "pigeon",
+      "ops"
+    ]
   },
   "stelios": {
     "name": "Stelios Frantzeskakis",

@@ -1,4 +1,5 @@
-import format from "date-fns/format";
+import format from "date-fns/lightFormat";
+import getWeek from "date-fns/getWeek";
 
 import pivotalCommands from "./pivotal/commands";
 import githubCommands from "./github/commands";
@@ -6,15 +7,7 @@ import { loadAllFonts } from "./fonts";
 import { suggestions } from "./suggestions";
 import outception from "./outception";
 
-figma.parameters.on("input", async (input: ParameterInputEvent) => {
-  if (suggestions[input.key]) {
-    suggestions[input.key](input);
-  }
-});
-
-function isGithubCommit(item: any): item is GithubCommit {
-  return (item as GithubCommit).authoredDate !== undefined;
-}
+const isGithubCommit = (item: any): item is GithubCommit => (item as GithubCommit).authoredDate !== undefined;
 
 export function groupBy<T extends PivotalStory | GithubCommit>(result: ByMonthWeek, data: T[])  {
   for (const item of data) {
@@ -24,7 +17,7 @@ export function groupBy<T extends PivotalStory | GithubCommit>(result: ByMonthWe
     if (dateString) {
       const date = new Date(dateString);
       month = format(date, "yyyy/MM");
-      week = `W${format(date, "ww")}`;
+      week = `W${getWeek(date)}`;
     } else {
       month = "Not Accepted";
       week = "n/a"
@@ -35,6 +28,12 @@ export function groupBy<T extends PivotalStory | GithubCommit>(result: ByMonthWe
     isGithubCommit(item) ? result[month][week].commits.push(item) : result[month][week].stories.push(item);
   }
 }
+
+figma.parameters.on("input", async (input: ParameterInputEvent) => {
+  if (suggestions[input.key]) {
+    suggestions[input.key](input);
+  }
+});
 
 figma.on("run", async ({ command, parameters }: RunEvent) => {
   const [pivotalStories, githubCommits] = await Promise.all([

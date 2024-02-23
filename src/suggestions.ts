@@ -1,5 +1,5 @@
 import { fetchEpics } from "./pivotal/fetch";
-import { users, teams, periods } from "./config";
+import { users, teams, periods } from "./config/config";
 
 type Suggestion<T> = {
   name: string,
@@ -24,13 +24,13 @@ export const suggestions: {[key: string]: (input: ParameterInputEvent) => void} 
   },
 
   period({query, result}: ParameterInputEvent) {
-    const periodsSuggestions = Object.keys(periods).reduce((acc, name) => {
+    const periodsSuggestions = Object.keys(periods).reduce((memo, name) => {
       const {t1, t2, t3, ...year} = periods[name];
-      acc.push({name, data: year})
-      acc.push({name: `${name} T1`, data: t1});
-      acc.push({name: `${name} T2`, data: t2});
-      acc.push({name: `${name} T3`, data: t3});
-      return acc;
+      memo.push({name, data: year});
+      memo.push({name: `${name} T1`, data: t1});
+      memo.push({name: `${name} T2`, data: t2});
+      memo.push({name: `${name} T3`, data: t3});
+      return memo;
     }, [] as Suggestion<{startDate: string, endDate: string}>[]);
     result.setSuggestions(periodsSuggestions.filter(({name}) => name.includes(query)));
   }

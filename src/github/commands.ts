@@ -1,5 +1,5 @@
 import { getRepos, getCommits } from "./fetch";
-import { users } from "../config";
+import { users } from "../config/config";
 
 export default {
   async byEpic(parameters: ParameterValues): Promise<GithubCommit[]> {

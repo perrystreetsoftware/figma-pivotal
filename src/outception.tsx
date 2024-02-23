@@ -1,10 +1,11 @@
-import format from "date-fns/format";
+import format from "date-fns/lightFormat";
 
 import PivotalSticky from "./pivotal/sticky";
 import PivotalStats from "./pivotal/stats";
 import GithubSticky from "./github/sticky";
 import GithubStats from "./github/stats";
-import { FrameToSection, Frame } from "./frame";
+import { FrameToSection, Frame } from "./components/frame";
+import { users, teams } from "./config/config";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
@@ -13,9 +14,9 @@ function dateFormat(date: string): string {
 }
 
 const title: {[command: string]: (parameters: ParameterValues) => string} = {
-  byEpic: ({pivotalEpicId, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpicId} in Project ${pivotalProject}"`,
-  byDate: ({pivotalProject, startDate, endDate}: ParameterValues) => `Outception for Project "${pivotalProject}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}`,
-  byOwner: ({owner, period: {startDate, endDate}}: ParameterValues) => `Outception for "${owner}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}"`
+  byEpic: ({pivotalEpicId, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpicId}" in Project "${teams[pivotalProject].name}"`,
+  byDate: ({pivotalProject, startDate, endDate}: ParameterValues) => `Outception for Project "${teams[pivotalProject].name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}`,
+  byOwner: ({owner, period: {startDate, endDate}}: ParameterValues) => `Outception for "${users[owner].name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}"`
 }
 
 function CommitOrStory({storiesOrCommits}:  {storiesOrCommits: StoryCommits}): FrameNode[] {

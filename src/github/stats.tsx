@@ -1,6 +1,5 @@
-import { Sticky, Text, Br } from "../sticky";
+import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
-import { add } from "../../node_modules/date-fns/add";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 

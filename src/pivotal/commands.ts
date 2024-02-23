@@ -1,5 +1,5 @@
 import { fetchStoriesByEpic, fetchStoriesByPeriod } from "./fetch";
-import { users, teams } from "../config";
+import { users, teams } from "../config/config";
 
 export default {
   async byEpic(parameters: ParameterValues): Promise<PivotalStory[]> {
