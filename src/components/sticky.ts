@@ -16,7 +16,7 @@ type StickyProps = {
 
 const isStickyChildCallback = (child: any): child is StickyChildCallback => typeof child === "function";
 
-export const Br: StickyChildCallback = (sticky: StickyNode) => sticky.text.characters += "\n";
+export const Br: StickyChildCallback = () => (sticky: StickyNode) => sticky.text.characters += "\n";
 
 export function Text({ children, format, newLine = false }: TextProps): StickyChildCallback {
   return (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => {
