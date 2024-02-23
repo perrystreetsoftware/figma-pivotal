@@ -8,9 +8,16 @@ function toSentence(parts: string[]): string {
   return parts.join(', ').replace(/,\s([^,]+)$/, ', and $1');
 }
 
+const repositoryEmoji: { [key in string]: string } = {
+  Husband: "🍎",
+  "Husband-Droid": "🤖",
+  "Husband-Redis": "🖥️",
+};
+
 export default function GithubSticky({commit}: {commit: GithubCommit}): StickyNode {
   return (
     <Sticky fill={figJamBase.white}>
+      <Text>{repositoryEmoji[commit.repository.name] || "💾"} </Text>
       <Text format={{ fontName: fonts.interBold, url: commit.commitUrl }} newLine>{commit.messageHeadline}</Text>
       <Br />
       <Text format={{ listType: "UNORDERED" }}>
