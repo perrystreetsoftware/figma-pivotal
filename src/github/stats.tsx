@@ -12,16 +12,16 @@ function calculateStats(storiesAndCommits: ByMonthWeek) {
     changedFilesIfAvailable: 0
   };
 
-  Object.values(storiesAndCommits).forEach(month => {
-    Object.values(month).forEach(week => {
-      week.commits.forEach(commit => {
+  for (const month of Object.values(storiesAndCommits)) {
+    for (const {commits} of Object.values(month)) {
+      for (const commit of commits) {
         commit.authors.author.length > 1 ? stats.pairCommits++ : stats.soloCommits++;
         stats.additions += commit.additions;
         stats.deletions += commit.deletions;
         stats.changedFilesIfAvailable += commit.changedFilesIfAvailable;
-      });
-    });
-  });
+      }
+    }
+  }
 
   return stats;
 }

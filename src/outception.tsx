@@ -9,9 +9,7 @@ import { users, teams } from "./config/config";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
-function dateFormat(date: string): string {
-  return format(new Date(date), "yyyy/MM/dd");
-}
+const dateFormat = (date: string): string => format(new Date(date), "yyyy/MM/dd");
 
 function mapSorted<T>(sortable: {[key: string]: T}, callback: (key: string, value: T) => any): any[] {
   const sort = (a: [string, T], b: [string, T]) => a[0].localeCompare(b[0]);
