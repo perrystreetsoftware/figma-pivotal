@@ -1,7 +1,9 @@
 import format from "date-fns/format";
 
 import PivotalSticky from "./pivotal/sticky";
+import PivotalStats from "./pivotal/stats";
 import GithubSticky from "./github/sticky";
+import GithubStats from "./github/stats";
 import { FrameToSection, Frame } from "./frame";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
@@ -39,7 +41,12 @@ function CommitOrStory({storiesOrCommits}:  {storiesOrCommits: StoryCommits}): F
 export default function outception(storiesAndCommits: ByMonthWeek, command: string, parameters: ParameterValues): SectionNode {
   return (
     <FrameToSection>
-      <Frame layoutMode="HORIZONTAL" separationMultiple={5} name={title[command](parameters)} color={figJamBaseLight.lightGray}>
+      <Frame layoutMode="VERTICAL" separationMultiple={5} name={title[command](parameters)} color={figJamBaseLight.lightGray}>
+        <Frame layoutMode="HORIZONTAL" separationMultiple={3} name="Stats" group>
+          <PivotalStats storiesAndCommits={storiesAndCommits} />
+          {command === "byOwner" && <GithubStats storiesAndCommits={storiesAndCommits} />}
+        </Frame>
+        <Frame layoutMode="HORIZONTAL" separationMultiple={3} name="Stories and Commits" group>
         {Object.keys(storiesAndCommits).sort().map(month => (
           <Frame layoutMode="HORIZONTAL" separationMultiple={3} name={month} color={figJamBaseLight.lightViolet}>
             {Object.keys(storiesAndCommits[month]).sort().map(week => (
@@ -49,6 +56,7 @@ export default function outception(storiesAndCommits: ByMonthWeek, command: stri
             ))}
           </Frame>
         ))}
+        </Frame>
       </Frame>
     </FrameToSection>
   );

@@ -9,15 +9,15 @@ type TextProps = {
 
 type StickyProps = {
   children: FigmaDeclarativeChildren<TextComponent>,
-  fill: string
+  fill: string,
+  narrow?: boolean
 }
 
-export function Br() {
+
+const isStickyChildCallback = (child: any): child is StickyChildCallback => typeof child === "function";
+
+export function Br(): StickyChildCallback {
   return (sticky: StickyNode) => sticky.text.characters += "\n";
-}
-
-function isStickyChildCallback(child: any): child is StickyChildCallback {
-  return typeof child === "function";
 }
 
 export function Text({ children, format, newLine = false }: TextProps): StickyChildCallback {
@@ -25,13 +25,13 @@ export function Text({ children, format, newLine = false }: TextProps): StickyCh
     const start = sticky.text.characters.length;
 
     if (Array.isArray(children)) {
-      children.flat().forEach((child) => {
+      for (const child of children.flat()) {
         if (typeof child === "string") {
           sticky.text.characters += child;
         } else if (isStickyChildCallback(child)) {
           child(sticky, stickyFormatting);
         }
-      });
+      }
     }
 
     const end = sticky.text.characters.length;
@@ -40,16 +40,14 @@ export function Text({ children, format, newLine = false }: TextProps): StickyCh
   };
 }
 
-export function Sticky({children, fill}: StickyProps): StickyNode {
+export function Sticky({children, fill, narrow = false}: StickyProps): StickyNode {
   const sticky = figma.createSticky();
   const stickyFormatting: FigmaTextFormat[] = [];
 
   if (Array.isArray(children)) {
-    children.flat().forEach((child) => {
-      if (isStickyChildCallback(child)) {
-        child(sticky, stickyFormatting)
-      }
-    });
+    for (const child of children.flat()) {
+      isStickyChildCallback(child) && child(sticky, stickyFormatting);
+    }
   }
 
   stickyFormatting.forEach(({ start, end, format }) => {
@@ -61,9 +59,9 @@ export function Sticky({children, fill}: StickyProps): StickyNode {
     if (format.lineHeight) sticky.text.setRangeLineHeight(start, end, {unit: "PIXELS", value: format.lineHeight});
   });
 
-  // sticky.setPluginData(pluginData.key, pluginData.value);
   sticky.authorVisible = false;
   sticky.fills = [figma.util.solidPaint(fill)];
+  sticky.isWideWidth = !narrow;
 
   return sticky;
 }
