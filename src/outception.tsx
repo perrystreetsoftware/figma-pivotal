@@ -13,30 +13,15 @@ function dateFormat(date: string): string {
   return format(new Date(date), "yyyy/MM/dd");
 }
 
+function mapSorted<T>(sortable: {[key: string]: T}, callback: (key: string, value: T) => any): any[] {
+  const sort = (a: [string, T], b: [string, T]) => a[0].localeCompare(b[0]);
+  return Object.entries(sortable).sort(sort).map(([key, value]) => callback(key, value));
+}
+
 const title: {[command: string]: (parameters: ParameterValues) => string} = {
   byEpic: ({pivotalEpicId, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpicId}" in Project "${teams[pivotalProject].name}"`,
   byDate: ({pivotalProject, startDate, endDate}: ParameterValues) => `Outception for Project "${teams[pivotalProject].name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}`,
   byOwner: ({owner, period: {startDate, endDate}}: ParameterValues) => `Outception for "${users[owner].name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}"`
-}
-
-function CommitOrStory({storiesOrCommits}:  {storiesOrCommits: StoryCommits}): FrameNode[] {
-  let nodes: FrameNode[] = [];
-  if (storiesOrCommits.stories.length > 0) {
-    nodes.push(
-      <Frame layoutMode="VERTICAL" separationMultiple={1} name="Stories" group>
-        {storiesOrCommits.stories.map(story => <PivotalSticky story={story} />)}
-      </Frame>
-    );
-  }
-
-  if (storiesOrCommits.commits.length > 0) {
-    nodes.push(
-      <Frame layoutMode="VERTICAL" separationMultiple={1} name="Commits" group>
-        {storiesOrCommits.commits.map(commit => <GithubSticky commit={commit} />)}
-      </Frame>
-    );
-  }
-  return nodes;
 }
 
 export default function outception(storiesAndCommits: ByMonthWeek, command: string, parameters: ParameterValues): SectionNode {
@@ -45,14 +30,29 @@ export default function outception(storiesAndCommits: ByMonthWeek, command: stri
       <Frame layoutMode="VERTICAL" separationMultiple={5} name={title[command](parameters)} color={figJamBaseLight.lightGray}>
         <Frame layoutMode="HORIZONTAL" separationMultiple={3} name="Stats" group>
           <PivotalStats storiesAndCommits={storiesAndCommits} />
-          {command === "byOwner" && <GithubStats storiesAndCommits={storiesAndCommits} />}
+          {(command === "byOwner") && <GithubStats storiesAndCommits={storiesAndCommits} />}
         </Frame>
+
         <Frame layoutMode="HORIZONTAL" separationMultiple={3} name="Stories and Commits" group>
-        {Object.keys(storiesAndCommits).sort().map(month => (
+
+        {mapSorted<ByMonthWeek[0]>(storiesAndCommits, (month, monthStoriesAndCommits) => (
           <Frame layoutMode="HORIZONTAL" separationMultiple={3} name={month} color={figJamBaseLight.lightViolet}>
-            {Object.keys(storiesAndCommits[month]).sort().map(week => (
+
+            {mapSorted<StoryCommits>(monthStoriesAndCommits, (week, {stories, commits}) => (
               <Frame layoutMode="HORIZONTAL" separationMultiple={2} name={week} color={figJamBase.violet}>
-                <CommitOrStory storiesOrCommits={storiesAndCommits[month][week]} />
+                
+              {(stories.length > 0) && (
+                <Frame layoutMode="VERTICAL" separationMultiple={1} name="Stories" group>
+                  {stories.map(story => <PivotalSticky story={story} />)}
+                </Frame>
+              )}
+
+              {(commits.length > 0) && (
+                <Frame layoutMode="VERTICAL" separationMultiple={1} name="Commits" group>
+                  {commits.map(commit => <GithubSticky commit={commit} />)}
+                </Frame>
+              )}
+
               </Frame>
             ))}
           </Frame>
