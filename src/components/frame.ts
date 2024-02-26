@@ -6,7 +6,7 @@ type SectionFrameProps = {
   name: string,
   separationMultiple: number,
   color?: string,
-  group?: boolean
+  noSection?: boolean
 };
 
 const isFrameNode = (node: SceneNode): node is FrameNode => node.type === "FRAME";
@@ -39,17 +39,17 @@ function createSectionFromFrame(frame: FrameNode): SectionNode {
   section.y = frame.y;
   section.resizeWithoutConstraints(frame.width, frame.height);
   section.fills = frame.fills;
-  if (frame.getPluginData("group") === "true") section.setPluginData("group", "true");
+  if (frame.getPluginData("noSection") === "true") section.setPluginData("noSection", "true");
   return section;
 }
 
-export function Frame({children, layoutMode, name, separationMultiple, color, group}: SectionFrameProps): FrameNode {
+export function SectionFrame({children, layoutMode, name, separationMultiple, color, noSection}: SectionFrameProps): FrameNode {
   const frame = figma.createFrame();
   frame.layoutMode = layoutMode;
   frame.primaryAxisSizingMode = frame.counterAxisSizingMode = "AUTO";
   frame.itemSpacing = frame.counterAxisSpacing = frame.paddingBottom = frame.paddingTop = frame.paddingLeft = frame.paddingRight = separation * separationMultiple;
   frame.name = name;
-  if (group) frame.setPluginData("group", "true");
+  if (noSection) frame.setPluginData("noSection", "true");
   if (color) frame.fills = [figma.util.solidPaint(color)];
 
   if (Array.isArray(children)) {
@@ -67,5 +67,5 @@ export function FrameToSection({children}: {children: FrameNode[]}) {
   const frame = children[0] as FrameNode;
   const section = createSectionFromFrame(frame);
   walkNodeTree(frame, section);
-  section.findAllWithCriteria({types: ["SECTION"], pluginData: {keys: ["group"]}}).forEach(figma.ungroup);
+  section.findAllWithCriteria({types: ["SECTION"], pluginData: {keys: ["noSection"]}}).forEach(figma.ungroup);
 }
