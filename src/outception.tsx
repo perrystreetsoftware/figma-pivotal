@@ -11,7 +11,7 @@ const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
 const dateFormat = (date: string): string => format(new Date(date), "yyyy/MM/dd");
 
-const mapSorted = <T,>(sortable: {[key: string]: T}, callback: (key: string, value: T) => any) => Object.keys(sortable).sort().map(key => callback(key, sortable[key]));
+const mapSorted = <T,>(sortable: {[key: string]: T}, callback: (key: string, value: T) => FigmaDeclarativeChildren<FrameNode>): FigmaDeclarativeChildren<FrameNode>[] => Object.keys(sortable).sort().map(key => callback(key, sortable[key]));
 
 const title: {[command: string]: (parameters: ParameterValues) => string} = {
   byEpic: ({pivotalEpicId, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpicId}" in Project "${teams[pivotalProject].name}"`,

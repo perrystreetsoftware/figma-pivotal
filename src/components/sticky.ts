@@ -1,6 +1,9 @@
-type TextComponent = FunctionalWidget<TextProps>;
+type TextComponent = (props: StickyChildProps) => void;
 
-type StickyChildCallback = (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => void
+type StickyChildProps = {
+  sticky: StickyNode,
+  stickyFormatting: FigmaTextFormat[]
+}
 
 type TextProps = {
   children: FigmaDeclarativeChildren<TextComponent>,
@@ -14,20 +17,20 @@ type StickyProps = {
   narrow?: boolean
 }
 
-const isStickyChildCallback = (child: any): child is StickyChildCallback => typeof child === "function";
+const isTextComponent = (child: any): child is TextComponent => typeof child === "function";
 
-export const Br: StickyChildCallback = () => (sticky: StickyNode) => sticky.text.characters += "\n";
+export const Br = (): TextComponent => ({sticky}) => sticky.text.characters += "\n";
 
-export function Text({ children, format, newLine = false }: TextProps): StickyChildCallback {
-  return (sticky: StickyNode, stickyFormatting: FigmaTextFormat[]) => {
+export function Text({ children, format, newLine = false }: TextProps): TextComponent {
+  return ({sticky, stickyFormatting}) => {
     const start = sticky.text.characters.length;
 
     if (Array.isArray(children)) {
       for (const child of children.flat()) {
         if (typeof child === "string") {
           sticky.text.characters += child;
-        } else if (isStickyChildCallback(child)) {
-          child(sticky, stickyFormatting);
+        } else if (isTextComponent(child)) {
+          child({sticky, stickyFormatting});
         }
       }
     }
@@ -44,7 +47,7 @@ export function Sticky({children, fill, narrow = false}: StickyProps): StickyNod
 
   if (Array.isArray(children)) {
     for (const child of children.flat()) {
-      isStickyChildCallback(child) && child(sticky, stickyFormatting);
+      isTextComponent(child) && child({sticky, stickyFormatting});
     }
   }
 
