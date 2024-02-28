@@ -1,6 +1,6 @@
-import usersJson from "./users.json";
-import teamsJson from "./teams.json";
-import periodsJson from "./periods.json";
+import usersJson from "./users.json"; //  with { type: "json" };
+import teamsJson from "./teams.json"; // with { type: "json" };
+import periodsJson from "./periods.json"; // with { type: "json" };
 
 const allUsers: {[user: string]: PSSAllUser} = usersJson
 

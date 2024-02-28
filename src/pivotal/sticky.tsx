@@ -1,7 +1,7 @@
 import { fonts } from "../fonts";
 import { Sticky, Text, Br } from "../components/sticky";
 
-import CycleTime from "./cycle_time";
+import CycleTime from "./cycleTime";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 

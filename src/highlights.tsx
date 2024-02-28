@@ -19,7 +19,7 @@ type HighlightProps = {
   color: string
 };
 
-const lightColor = (string: string): string => `light${string.charAt(0).toUpperCase()}${string.slice(1)}`;
+const lightColor = (string: string): string => figJamBaseLight[`light${string.charAt(0).toUpperCase()}${string.slice(1)}`];
 
 function Highlight({ title, description, color }: HighlightProps) {
   return (
@@ -54,8 +54,7 @@ function ImprovementSection({name, color}: HighlightStickiesProps) {
 }
 
 function HighLightOrImprovementSection({name, color, Component }: HighLightOrImprovementSectionProps ) {
-  const stickyColor = figJamBaseLight[lightColor(color)];
-  console.log(name, color, stickyColor);
+  const stickyColor = lightColor(color);
   return (
     <SectionFrame layoutMode="HORIZONTAL" separationMultiple={2} name={name} color={figJamBase[color]}>
       <Component name="Highlight 1" color={stickyColor} />

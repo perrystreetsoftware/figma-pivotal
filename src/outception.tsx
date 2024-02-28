@@ -6,14 +6,16 @@ import GithubSticky from "./github/sticky";
 import GithubStats from "./github/stats";
 import { FrameToSection, SectionFrame } from "./components/frame";
 import { users, teams } from "./config/config";
-import AllHighlights from "./highlights";
-
+import Highlights from "./highlights";
+import WeeklyUpdates from "./weeklyUpdates";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
 const dateFormat = (date: string): string => format(new Date(date), "yyyy/MM/dd");
 
-const mapSorted = <T,>(sortable: {[key: string]: T}, callback: (key: string, value: T) => FigmaDeclarativeChildren<FrameNode>): FigmaDeclarativeChildren<FrameNode>[] => Object.keys(sortable).sort().map(key => callback(key, sortable[key]));
+function mapSorted<T>(sortable: {[key: string]: T}, callback: (key: string, value: T) => FigmaDeclarativeChildren<FrameNode>): FigmaDeclarativeChildren<FrameNode>[] {
+  return Object.keys(sortable).sort().map(key => callback(key, sortable[key]));
+}
 
 const title: {[command: string]: (parameters: ParameterValues) => string} = {
   byEpic: ({pivotalEpicId, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpicId}" in Project "${teams[pivotalProject].name}"`,
@@ -35,20 +37,22 @@ export default function outception(storiesAndCommits: ByMonthWeek, command: stri
           {mapSorted<ByMonthWeek[0]>(storiesAndCommits, (month, monthStoriesAndCommits) =>
             <SectionFrame layoutMode="HORIZONTAL" separationMultiple={3} name={month} color={figJamBaseLight.lightViolet}>
 
+              {(command === "byOwner") && <WeeklyUpdates month={month} />}
+
               {mapSorted<StoryCommits>(monthStoriesAndCommits, (week, {stories, commits}) =>
                 <SectionFrame layoutMode="HORIZONTAL" separationMultiple={2} name={week} color={figJamBase.violet}>
                 
-                {(stories.length > 0) && (
+                {(stories.length > 0) &&
                   <SectionFrame layoutMode="VERTICAL" separationMultiple={1} name="Stories" noSection>
                     {stories.map(story => <PivotalSticky story={story} />)}
                   </SectionFrame>
-                )}
+                }
 
-                {(commits.length > 0) && (
+                {(commits.length > 0) &&
                   <SectionFrame layoutMode="VERTICAL" separationMultiple={1} name="Commits" noSection>
                     {commits.map(commit => <GithubSticky commit={commit} />)}
                   </SectionFrame>
-                )}
+                }
 
                 </SectionFrame>
               )}
@@ -58,7 +62,7 @@ export default function outception(storiesAndCommits: ByMonthWeek, command: stri
 
         </SectionFrame>
 
-        {(command === "byOwner") && <AllHighlights />}
+        {(command === "byOwner") && <Highlights />}
       </SectionFrame>
     </FrameToSection>
   );
