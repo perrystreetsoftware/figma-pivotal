@@ -1,9 +1,7 @@
-type TextComponent = (props: StickyChildProps) => void;
-
-type StickyChildProps = {
+type TextComponent = (props: {
   sticky: StickyNode,
   stickyFormatting: FigmaTextFormat[]
-}
+}) => void;
 
 type TextProps = {
   children: FigmaDeclarativeChildren<TextComponent>,
@@ -17,7 +15,7 @@ type StickyProps = {
   narrow?: boolean
 }
 
-const isTextComponent = (child: any): child is TextComponent => typeof child === "function";
+const isTextComponent = (child: unknown): child is TextComponent => typeof child === "function";
 
 export const Br = (): TextComponent => ({sticky}) => sticky.text.characters += "\n";
 

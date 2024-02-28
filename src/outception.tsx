@@ -6,6 +6,8 @@ import GithubSticky from "./github/sticky";
 import GithubStats from "./github/stats";
 import { FrameToSection, SectionFrame } from "./components/frame";
 import { users, teams } from "./config/config";
+import AllHighlights from "./highlights";
+
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
@@ -55,6 +57,8 @@ export default function outception(storiesAndCommits: ByMonthWeek, command: stri
           )}
 
         </SectionFrame>
+
+        {(command === "byOwner") && <AllHighlights />}
       </SectionFrame>
     </FrameToSection>
   );

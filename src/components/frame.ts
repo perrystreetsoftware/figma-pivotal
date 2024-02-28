@@ -11,7 +11,7 @@ type SectionFrameProps = {
 
 const isFrameNode = (node: SceneNode): node is FrameNode => node.type === "FRAME";
 const isStickyNode = (node: SceneNode): node is StickyNode => node.type === "STICKY";
-const isSceneNode = (node: SceneNode): node is SceneNode => typeof node === "object" && !!node.type;
+const isSceneNode = (node: unknown): node is SceneNode => typeof node === "object" && node!.hasOwnProperty("type");
 
 function walkNodeTree(frame: FrameNode, section: SectionNode) {
   for (const child of iterateChildrenAndRemoveFrame(frame)) {
@@ -28,7 +28,7 @@ function walkNodeTree(frame: FrameNode, section: SectionNode) {
 function* iterateChildrenAndRemoveFrame(frame: FrameNode): Generator<SceneNode, void, undefined> {
   frame.resizeWithoutConstraints(frame.width, frame.height);
   frame.layoutMode = "NONE";
-  yield* frame.children as SceneNode[];
+  yield* frame.children;
   frame.remove();
 }
 

@@ -1,7 +1,7 @@
 import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
 
-const { figJamBaseLight, figJamBase } = figma.constants.colors;
+const { figJamBaseLight } = figma.constants.colors;
 
 function calculateStats(storiesAndCommits: ByMonthWeek) {
   const stats = {

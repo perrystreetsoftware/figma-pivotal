@@ -1,8 +1,10 @@
+// declare type UserType = "SERVER" | "ANDROID" | "IOS" | "WEB" | "PRODUCT_QA" | "DEV_QA" | "DESIGN_QA"; // Does not work with JSON
+
 declare type PSSUser = {
   name: string,
   pivotal_id: number,
   slack_id: string,
-  type: string, // "SERVER" | "ANDROID" | "IOS" | "WEB" | "PRODUCT_QA" | "DEV_QA" | "DESIGN_QA",
+  type: string,
   pivotal_projects: string[],
   github_emails?: string[],
 }
