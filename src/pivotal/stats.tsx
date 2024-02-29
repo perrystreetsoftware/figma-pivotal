@@ -1,7 +1,9 @@
 import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
 
-const { figJamBaseLight, figJamBase } = figma.constants.colors;
+type PivotalStatsProps = { storiesAndCommits: ByMonthWeek };
+
+const { figJamBaseLight } = figma.constants.colors;
 
 function calculateStats(storiesAndCommits: ByMonthWeek) {
   const stats = {
@@ -24,7 +26,7 @@ function calculateStats(storiesAndCommits: ByMonthWeek) {
   return stats;
 }
 
-export default function PivotalStats({storiesAndCommits}: {storiesAndCommits: ByMonthWeek}): StickyNode {
+export default function PivotalStats({storiesAndCommits}: PivotalStatsProps): StickyNode {
   const stats = calculateStats(storiesAndCommits);
   return (
     <Sticky fill={figJamBaseLight.lightGreen}>

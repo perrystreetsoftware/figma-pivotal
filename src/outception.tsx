@@ -6,14 +6,14 @@ import GithubSticky from "./github/sticky";
 import GithubStats from "./github/stats";
 import { FrameToSection, SectionFrame } from "./components/frame";
 import { users, teams } from "./config/config";
-import Highlights from "./highlights";
-import WeeklyUpdates from "./weeklyUpdates";
+import CheckIn from "./byOwner/checkIn";
+import WeeklyUpdates from "./byOwner/weeklyUpdates";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
 const dateFormat = (date: string): string => format(new Date(date), "yyyy/MM/dd");
 
-function mapSorted<T>(sortable: {[key: string]: T}, callback: (key: string, value: T) => FigmaDeclarativeChildren<FrameNode>): FigmaDeclarativeChildren<FrameNode>[] {
+function mapSorted<T>(sortable: Record<string, T>, callback: (key: string, value: T) => FigmaDeclarativeChildren<FrameNode>): FigmaDeclarativeChildren<FrameNode>[] {
   return Object.keys(sortable).sort().map(key => callback(key, sortable[key]));
 }
 
@@ -62,7 +62,7 @@ export default function outception(storiesAndCommits: ByMonthWeek, command: stri
 
         </SectionFrame>
 
-        {(command === "byOwner") && <Highlights />}
+        {(command === "byOwner") && <CheckIn />}
       </SectionFrame>
     </FrameToSection>
   );

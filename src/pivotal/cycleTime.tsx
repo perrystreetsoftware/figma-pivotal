@@ -4,11 +4,16 @@ import { fonts } from "../fonts";
 import { Text } from "../components/sticky";
 import { usersByPivotalId } from "../config/config";
 
+type CycleTimeProps = {
+  story: PivotalStory,
+  cycleTimeKey: keyof PivotalCycleTimeDetails,
+};
+
 const { figJamBase } = figma.constants.colors;
 
 const cycleTimeBufferHrs = 12;
 
-const cycleTimeHeaders: { [key in keyof PivotalCycleTimeDetails]: string } = {
+const cycleTimeHeaders: Record<keyof PivotalCycleTimeDetails, string> = {
   started_time: "Work",
   finished_time: "Deliver",
   delivered_time: "Accept",
@@ -17,7 +22,7 @@ const cycleTimeHeaders: { [key in keyof PivotalCycleTimeDetails]: string } = {
   rejected_count: "Rejected #"
 };
 
-const startedTimeThresholds: { [key: string]: {[key: number]: number} } = {
+const startedTimeThresholds: Record<string, Record<number, number>> = {
   feature: [0, 1, 2, 3, 5, 8, 13].reduce<{[key: number]: number}>((memo, i) => (memo[i] = ((i * 24) + cycleTimeBufferHrs) * millisecondsInHour, memo), {}),
   bug: { 0: (48 + cycleTimeBufferHrs) * millisecondsInHour},
   chore: { 0: (24 + cycleTimeBufferHrs) * millisecondsInHour},
@@ -57,7 +62,7 @@ function cycleTimeThresholdColor({story_type, cycle_time_details, estimate}: Piv
   return cycle_time_details[cycleTimeKey] > thresholds[cycleTimeKey] ? figJamBase.red : figJamBase.black;
 }
 
-export default function CycleTime({story, cycleTimeKey}: {story: PivotalStory, cycleTimeKey: keyof PivotalCycleTimeDetails}) {
+export default function CycleTime({story, cycleTimeKey}: CycleTimeProps) {
   if (story.cycle_time_details[cycleTimeKey] <= 0) return;
 
   return (

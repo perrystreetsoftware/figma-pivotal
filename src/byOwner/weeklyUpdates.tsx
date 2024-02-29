@@ -1,14 +1,14 @@
 import format from "date-fns/lightFormat";
 
-import { SectionFrame } from "./components/frame";
-import { Sticky, Text } from "./components/sticky";
-import { fonts } from "./fonts";
-
-const { figJamBaseLight } = figma.constants.colors;
+import { SectionFrame } from "../components/frame";
+import { Sticky, Text } from "../components/sticky";
+import { fonts } from "../fonts";
 
 type WeekUpdateProps = {
   month: string;
 };
+
+const { figJamBaseLight } = figma.constants.colors;
 
 export default function WeeklyUpdates({ month }: WeekUpdateProps) {
   return (

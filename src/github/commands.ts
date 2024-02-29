@@ -2,11 +2,11 @@ import { getRepos, getCommits } from "./fetch";
 import { users } from "../config/config";
 
 export default {
-  async byEpic(parameters: ParameterValues): Promise<GithubCommit[]> {
+  async byEpic(_parameters: ParameterValues): Promise<GithubCommit[]> {
     return [];
   },
 
-  async byDate(parameters: ParameterValues): Promise<GithubCommit[]> {
+  async byDate(_parameters: ParameterValues): Promise<GithubCommit[]> {
     return [];
   },
 
@@ -20,4 +20,4 @@ export default {
 
     return commits.flat().filter(({authors}) => authors.author.some(({email}) => githubEmails!.includes(email)));
   }
-} as {[key: string]: (parameters: ParameterValues) => Promise<GithubCommit[]>};
+} as Record<string, (parameters: ParameterValues) => Promise<GithubCommit[]>>;

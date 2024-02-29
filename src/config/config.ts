@@ -4,13 +4,13 @@ import periodsJson from "./periods.json"; // with { type: "json" };
 
 const allUsers: {[user: string]: PSSAllUser} = usersJson
 
-export const users: {[user: string]: PSSUser} = Object.keys(allUsers)
+export const users: Readonly<Record<string, PSSUser>> = Object.keys(allUsers)
   .filter((user) => "pivotal_id" in allUsers[user])
-  .reduce<{[user: string]: PSSUser}>((memo, user) => (memo[user] = allUsers[user] as PSSUser, memo), {});
+  .reduce<Record<string, PSSUser>>((memo, user) => (memo[user] = allUsers[user] as PSSUser, memo), {});
 
-export const teams: {[team: string]: PSSTeam} = teamsJson;
+export const teams: Readonly<Record<string, PSSTeam>> = teamsJson;
 
-export const periods: {[team: string]: PSSPeriod} = periodsJson;
+export const periods: Readonly<Record<string, PSSPeriod>> = periodsJson;
 
-export const usersByPivotalId: { [key: number]: PSSUser } = Object.values(users)
-  .reduce<{[key: number]: PSSUser}>((memo, user) => (memo[user.pivotal_id] = user, memo), {});
+export const usersByPivotalId: Readonly<Record<number, PSSUser>> = Object.values(users)
+  .reduce<Record<number, PSSUser>>((memo, user) => (memo[user.pivotal_id] = user, memo), {});

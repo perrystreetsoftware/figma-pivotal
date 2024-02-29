@@ -8,7 +8,7 @@ function toSentence(parts: string[]): string {
   return parts.join(', ').replace(/,\s([^,]+)$/, ', and $1');
 }
 
-const repositoryEmoji: { [key in string]: string } = {
+const repositoryEmoji: Record<string, string> = {
   Husband: "🍎",
   "Husband-Droid": "🤖",
   "Husband-Redis": "🖥️",

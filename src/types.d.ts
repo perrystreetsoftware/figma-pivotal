@@ -3,8 +3,4 @@ declare type StoryCommits = {
   commits: GithubCommit[]
 }
 
-declare type ByMonthWeek = {
-  [key: string]: {
-    [key: string]: StoryCommits
-  }
-};
+declare type ByMonthWeek = Record<string, Record<string, StoryCommits>>;

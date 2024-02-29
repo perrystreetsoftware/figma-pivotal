@@ -1,6 +1,6 @@
-import { SectionFrame } from "./components/frame";
-import { Sticky, Text } from "./components/sticky";
-import { fonts } from "./fonts";
+import { SectionFrame } from "../components/frame";
+import { Sticky, Text } from "../components/sticky";
+import { fonts } from "../fonts";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
@@ -64,7 +64,7 @@ function HighLightOrImprovementSection({name, color, Component }: HighLightOrImp
   );
 }
 
-export default function AllHighlights() {
+export default function CheckIn() {
   return (
     <SectionFrame layoutMode="HORIZONTAL" separationMultiple={3} name="Highlights" noSection>
       <HighLightOrImprovementSection name="Architecture" color="yellow" Component={HighlightSection} />

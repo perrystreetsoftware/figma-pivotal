@@ -1,27 +1,28 @@
 import { fonts } from "../fonts";
 import { Sticky, Text, Br } from "../components/sticky";
-
 import CycleTime from "./cycleTime";
+
+type PivotalStickyProps = { story: PivotalStory };
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
 
 const releaseLinkRegex = / \*\*\[(Android|iOS): \d+\]\(.+\)\*\*/;
 
-const storyTypeEmoji: { [key in PivotalStoryType]: string } = {
+const storyTypeEmoji: Record<PivotalStoryType, string> = {
   feature: "⭐️",
   bug: "🐞",
   chore: "⚙️",
   release: "🚀"
 };
 
-const storyTypeColor: { [key in PivotalStoryType]: string } = {
+const storyTypeColor: Record<PivotalStoryType, string> = {
   feature: figJamBaseLight.lightYellow,
   bug: figJamBaseLight.lightRed,
   chore: figJamBaseLight.lightGray,
   release: figJamBaseLight.lightBlue,
 };
 
-export default function PivotalSticky({story}: {story: PivotalStory}): StickyNode {
+export default function PivotalSticky({story}: PivotalStickyProps): StickyNode {
   return (
     <Sticky fill={storyTypeColor[story.story_type]}>
       <Text>{storyTypeEmoji[story.story_type]} </Text>

@@ -24,4 +24,4 @@ export default {
     }));
     return stories.flat().filter(({owner_ids, reviews}) => owner_ids.includes(pivotalId) || reviews.some(({reviewer_id}) => reviewer_id == pivotalId));
   }
-} as {[key: string]: (parameters: ParameterValues) => Promise<PivotalStory[]>};
+} as Record<string, (parameters: ParameterValues) => Promise<PivotalStory[]>>;

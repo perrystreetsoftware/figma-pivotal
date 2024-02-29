@@ -6,7 +6,7 @@ type Suggestion<T> = {
   data: T
 };
 
-export const suggestions: {[key: string]: (input: ParameterInputEvent) => void} = {
+export const suggestions: Record<string, (input: ParameterInputEvent) => void> = {
   owner({query, result}: ParameterInputEvent) {
     const owners = Object.keys(users);
     result.setSuggestions(owners.filter(s => s.includes(query)));
