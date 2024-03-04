@@ -99,7 +99,6 @@ async function fetchPaginatedGithub<T>(githubUsername: string, githubPAT: string
   return data;
 }
 
-
 async function fetchGitHub<T>(githubUsername: string, githubPAT: string, query: string, variables: {}, path: string[]): Promise<GithubEnvelope<T[]>> {
   const response = await fetch(`https://api.github.com/graphql`, {
     method: "POST",
