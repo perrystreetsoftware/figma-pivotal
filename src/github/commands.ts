@@ -1,5 +1,11 @@
-import { getRepos, getCommits } from "./fetch";
-import { users } from "../config/config";
+import { getRepos, getCommits, getCommitsByPullRequestLabel } from "./fetch";
+import { users, teams } from "../config/config";
+
+export async function byEpic(githubUsername: string, githubPAT: string, pivotalProject: string, dateRange: string): Promise<GithubCommit[]> {
+  const { name, repos } = teams[pivotalProject];
+  const commits = await Promise.all(repos.map(async (repo) => getCommitsByPullRequestLabel(githubUsername, githubPAT, repo, name.replace(/\s+/, ""), dateRange)))
+  return commits.flat();
+}
 
 export async function byOwner(parameters: ParameterValues): Promise<GithubCommit[]> {
   const { github_emails: githubEmails } = users[parameters!.owner];

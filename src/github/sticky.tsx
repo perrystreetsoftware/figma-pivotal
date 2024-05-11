@@ -1,7 +1,7 @@
 import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
 
-const { figJamBase } = figma.constants.colors;
+const { figJamBaseLight } = figma.constants.colors;
 
 function toSentence(parts: string[]): string {
   if (parts.length == 2) return parts.join(' and ');
@@ -16,7 +16,7 @@ const repositoryEmoji: Record<string, string> = {
 
 export default function GithubSticky({commit}: {commit: GithubCommit}): StickyNode {
   return (
-    <Sticky fill={figJamBase.lightGreen}>
+    <Sticky fill={figJamBaseLight.lightGreen}>
       <Text>{repositoryEmoji[commit.repository.name] || "💾"} </Text>
       <Text format={{ fontName: fonts.interBold, url: commit.commitUrl }} newLine>{commit.messageHeadline}</Text>
       <Br />

@@ -1,13 +1,14 @@
 import { fetchEpic, fetchStoriesByEpic, fetchStoriesByFilter, fetchStoriesByPeriod } from "./fetch";
 import { users, teams } from "../config/config";
 
-export async function byEpic({pivotalToken, pivotalEpicId}: ParameterValues): Promise<Data> {
+export async function byEpic(pivotalToken: string, pivotalEpicId: number): Promise<Data> {
   const epic = await fetchEpic(pivotalToken, pivotalEpicId);
   const stories = await fetchStoriesByEpic(pivotalToken, epic);
-  const filter = `-epic:"${epic.label.name}" AND accepted:${stories[0].accepted_at}..${epic.projected_completion}`;
+  const dateRange = `${stories[0].accepted_at}..${epic.projected_completion}`
+  const filter = `-epic:"${epic.label.name}" AND accepted:${dateRange}`;
   const otherStories = await fetchStoriesByFilter(pivotalToken, epic.project_id, filter);
 
-  return { stories, otherStories, commits: [] };
+  return { stories, otherStories, dateRange, commits: [] };
 }
 
 export async function byDate(parameters: ParameterValues): Promise<PivotalStory[]> {

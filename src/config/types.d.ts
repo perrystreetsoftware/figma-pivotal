@@ -18,7 +18,8 @@ declare type PSSAllUser = PSSUser | PSSOldUser
 declare type PSSTeam = {
   name: string,
   slack_channel: string,
-  pivotal_project_id: number
+  pivotal_project_id: number,
+  repos: string[],
 }
 
 declare type PSSPeriod = {

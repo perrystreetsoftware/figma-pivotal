@@ -24,6 +24,16 @@
         "allowFreeform": true
       },
       {
+        "name": "Github Username",
+        "key": "githubUsername",
+        "allowFreeform": true
+      },
+      {
+        "name": "Github Personal Access Token",
+        "key": "githubPAT",
+        "allowFreeform": true
+      },
+      {
         "name": "Pivotal Project",
         "key": "pivotalProject"
       },

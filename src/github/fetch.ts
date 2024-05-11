@@ -6,9 +6,44 @@ type GithubEnvelope<T> = {
   data: T
 }
 
+const commitGraphql = `
+  authors(first: 10) {
+    author: nodes {
+      email
+      name
+    }
+  }
+  repository {
+    name
+  }
+  additions
+  deletions
+  changedFilesIfAvailable
+  message
+  messageHeadline
+  commitUrl
+  authoredDate
+`;
+
+const commitsByPullRequestLabelGraphql = `
+  query getCommitsByPullRequestLabel($query: String!) {
+    search(query: $query, type: ISSUE, first: 100) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        ... on PullRequest {
+          mergeCommit { ${commitGraphql} }
+        }
+      }
+    }
+  }
+`;
+
 const reposGraphql = `
-  query getRepos($search: String!, $after: String) {
-    search(type: REPOSITORY, query: $search, after: $after, first: 100) {
+  query getRepos($query: String!, $after: String) {
+    search(type: REPOSITORY, query: $query, after: $after, first: 100) {
       pageInfo {
         endCursor
         hasNextPage
@@ -33,24 +68,7 @@ const commitsGraphql = `
                 endCursor
                 hasNextPage
               }
-              commits: nodes {
-                authors(first: 10) {
-                  author: nodes {
-                    email
-                    name
-                  }
-                }
-                repository {
-                  name
-                }
-                additions
-                deletions
-                changedFilesIfAvailable
-                message
-                messageHeadline
-                commitUrl
-                authoredDate
-              }
+              commits: nodes { ${commitGraphql} }
             }
           }
         }
@@ -58,6 +76,13 @@ const commitsGraphql = `
     }
   }
 `;
+
+export async function getCommitsByPullRequestLabel(githubUsername:string, githubPAT: string, repo: string, label: string, dateRange: string): Promise<GithubCommit[]> {
+  const path = ["data", "search"];
+  const query = `repo:perrystreetsoftware/${repo} label:"${label}" merged:${dateRange} is:pr is:merged sort:updated-desc`;
+  const pullRequest = await fetchPaginatedGithub<GithubPullRequest>(githubUsername, githubPAT, commitsByPullRequestLabelGraphql, { query }, path);
+  return pullRequest.map(({ mergeCommit }) => mergeCommit);
+}
 
 export async function getCommits(githubUsername:string, githubPAT: string, repo: string, startDate: Date, endDate: Date): Promise<GithubCommit[]> {
   const path = ["data", "repository", "defaultBranchRef", "target", "history"];
@@ -68,8 +93,8 @@ export async function getCommits(githubUsername:string, githubPAT: string, repo:
 
 export async function getRepos(githubUsername:string, githubPAT: string, since: Date): Promise<GithubRepo[]>{
   const path = ["data", "search"];
-  const variables = { search: `org:perrystreetsoftware pushed:>=${since.toISOString()} sort:updated-desc` };
-  return fetchPaginatedGithub<GithubRepo>(githubUsername, githubPAT, reposGraphql, variables, path);
+  const search = `org:perrystreetsoftware sort:updated-desc pushed:>=${since.toISOString()}`;
+  return fetchPaginatedGithub<GithubRepo>(githubUsername, githubPAT, reposGraphql, { search }, path);
 }
 
 function encodeBase64(string: string): string {
@@ -100,7 +125,7 @@ async function fetchPaginatedGithub<T>(githubUsername: string, githubPAT: string
 }
 
 async function fetchGitHub<T>(githubUsername: string, githubPAT: string, query: string, variables: {}, path: string[]): Promise<GithubEnvelope<T[]>> {
-  const response = await fetch(`https://api.github.com/graphql`, {
+  const response = await fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
