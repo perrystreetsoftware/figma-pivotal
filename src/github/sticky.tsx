@@ -16,7 +16,7 @@ const repositoryEmoji: Record<string, string> = {
 
 export default function GithubSticky({commit}: {commit: GithubCommit}): StickyNode {
   return (
-    <Sticky fill={figJamBase.white}>
+    <Sticky fill={figJamBase.lightGreen}>
       <Text>{repositoryEmoji[commit.repository.name] || "💾"} </Text>
       <Text format={{ fontName: fonts.interBold, url: commit.commitUrl }} newLine>{commit.messageHeadline}</Text>
       <Br />

@@ -1,11 +1,11 @@
 import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
 
-type PivotalStatsProps = { storiesAndCommits: ByMonthWeek };
+type PivotalStatsProps = { storiesAndCommits: DataByMonthWeek };
 
 const { figJamBaseLight } = figma.constants.colors;
 
-function calculateStats(storiesAndCommits: ByMonthWeek) {
+function calculateStats(storiesAndCommits: DataByMonthWeek) {
   const stats = {
     pointCount: 0,
     feature: 0,
@@ -15,7 +15,7 @@ function calculateStats(storiesAndCommits: ByMonthWeek) {
   };
 
   for (const month of Object.values(storiesAndCommits)) {
-    for (const {stories} of Object.values(month)) {
+    for (const { stories } of Object.values(month)) {
       for (const story of stories) {
         if (story.estimate) stats.pointCount += story.estimate;
         stats[story.story_type]++;
@@ -26,7 +26,7 @@ function calculateStats(storiesAndCommits: ByMonthWeek) {
   return stats;
 }
 
-export default function PivotalStats({storiesAndCommits}: PivotalStatsProps): StickyNode {
+export default function PivotalStats({ storiesAndCommits}: PivotalStatsProps): StickyNode {
   const stats = calculateStats(storiesAndCommits);
   return (
     <Sticky fill={figJamBaseLight.lightGreen}>

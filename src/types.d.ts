@@ -1,6 +1,7 @@
-declare type StoryCommits = {
+declare type Data = {
   stories: PivotalStory[],
-  commits: GithubCommit[]
+  otherStories: PivotalStory[],
+  commits: GithubCommit[],
 }
 
-declare type ByMonthWeek = Record<string, Record<string, StoryCommits>>;
+declare type DataByMonthWeek = Record<string, Record<string, Data>>;
