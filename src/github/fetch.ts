@@ -93,8 +93,8 @@ export async function getCommits(githubUsername:string, githubPAT: string, repo:
 
 export async function getRepos(githubUsername:string, githubPAT: string, since: Date): Promise<GithubRepo[]>{
   const path = ["data", "search"];
-  const search = `org:perrystreetsoftware sort:updated-desc pushed:>=${since.toISOString()}`;
-  return fetchPaginatedGithub<GithubRepo>(githubUsername, githubPAT, reposGraphql, { search }, path);
+  const query = `org:perrystreetsoftware sort:updated-desc pushed:>=${since.toISOString()}`;
+  return fetchPaginatedGithub<GithubRepo>(githubUsername, githubPAT, reposGraphql, { query }, path);
 }
 
 function encodeBase64(string: string): string {

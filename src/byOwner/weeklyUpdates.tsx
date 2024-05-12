@@ -1,5 +1,3 @@
-import format from "date-fns/lightFormat";
-
 import { SectionFrame } from "../components/frame";
 import { Sticky, Text } from "../components/sticky";
 import { fonts } from "../fonts";

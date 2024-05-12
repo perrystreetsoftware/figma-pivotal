@@ -6,32 +6,34 @@ type Suggestion<T> = {
   data: T
 };
 
+function suggestionsFor<T>(objects: SRecord<T>): Suggestion<T>[] {
+  return Object.keys(objects).sort().map(object => ({name: object, data: objects[object]}));
+}
+
+function setSuggestion({query, result}: ParameterInputEvent, suggestions: Suggestion<T>[]) {
+  result.setSuggestions(suggestions.filter(({name}) => name.includes(query)));
+}
+
+const ownerSuggestions = suggestionsFor<PSSUser>(users),
+  projectSuggestions = suggestionsFor<PSSTeam>(teams),
+  periodSuggestions = suggestionsFor<PSSPeriod>(periods);
+
 export const suggestions: Record<string, (input: ParameterInputEvent) => void> = {
-  owner({query, result}: ParameterInputEvent) {
-    const owners = Object.keys(users);
-    result.setSuggestions(owners.filter(s => s.includes(query)));
+  owner(parameterInputEvent: ParameterInputEvent) {
+    setSuggestion(parameterInputEvent, ownerSuggestions);
   },
 
-  pivotalProject({query, result}: ParameterInputEvent) {
-    const setSuggestions = Object.keys(teams);
-    result.setSuggestions(setSuggestions.filter(name => name.includes(query)));
+  pivotalProject(parameterInputEvent: ParameterInputEvent) {
+    setSuggestion(parameterInputEvent, projectSuggestions);
   },
 
-  async pivotalEpicId({parameters, query, result}: ParameterInputEvent) {
-    const epics = await fetchEpics(parameters.pivotalToken, teams[parameters.pivotalProject].pivotal_project_id);
-    const epicSuggestions: Suggestion<number>[] = epics.map(({name, id}) => ({name, data: id}));
-    result.setSuggestions(epicSuggestions.filter(({name}) => name.includes(query)));
+  async pivotalEpic({parameters: {pivotalToken, pivotalProject}, query, result}: ParameterInputEvent) {
+    const epics = await fetchEpics(pivotalToken, pivotalProject.pivotal_project_id);
+    const suggestions: Suggestion<PivotalEpic>[] = epics.map(epic => ({name: epic.name, data: epic}));
+    setSuggestion({query, result} as ParameterInputEvent, suggestions);
   },
 
-  period({query, result}: ParameterInputEvent) {
-    const periodsSuggestions = Object.keys(periods).reduce((memo, name) => {
-      const {t1, t2, t3, ...year} = periods[name];
-      memo.push({name, data: year});
-      memo.push({name: `${name} T1`, data: t1});
-      memo.push({name: `${name} T2`, data: t2});
-      memo.push({name: `${name} T3`, data: t3});
-      return memo;
-    }, [] as Suggestion<{startDate: string, endDate: string}>[]);
-    result.setSuggestions(periodsSuggestions.filter(({name}) => name.includes(query)));
+  period(parameterInputEvent: ParameterInputEvent) {
+    setSuggestion(parameterInputEvent, periodSuggestions);
   }
 };

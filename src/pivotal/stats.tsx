@@ -1,7 +1,11 @@
 import { Sticky, Text, Br } from "../components/sticky";
 import { fonts } from "../fonts";
+import { dateFormat } from "../date";
 
-type PivotalStatsProps = { storiesAndCommits: DataByMonthWeek };
+type PivotalStatsProps = {
+  storiesAndCommits: DataByMonthWeek,
+  epic?: PivotalEpic,
+};
 
 const { figJamBaseLight } = figma.constants.colors;
 
@@ -26,23 +30,29 @@ function calculateStats(storiesAndCommits: DataByMonthWeek) {
   return stats;
 }
 
-export default function PivotalStats({ storiesAndCommits}: PivotalStatsProps): StickyNode {
+export default function PivotalStats({ storiesAndCommits, epic }: PivotalStatsProps): StickyNode {
   const stats = calculateStats(storiesAndCommits);
   return (
     <Sticky fill={figJamBaseLight.lightGreen}>
-      <Text format={{ fontName: fonts.interBold, fontSize: 28 }} newLine>Pivotal Stats</Text>
+      { epic ? (
+        <Text format={{ fontName: fonts.interBold, fontSize: 28, url: epic.url }} newLine>{epic.name}</Text>
+      ) : (
+        <Text format={{ fontName: fonts.interBold, fontSize: 28 }} newLine>Pivotal Stats</Text>
+      )}
       <Br />
       <Text format={{ listType: "UNORDERED" }}>
-        <Text format={{ fontName: fonts.interItalic }}>Points: </Text>
+        <Text format={{ fontName: fonts.interBold }}>Points: </Text>
         <Text newLine>{stats.pointCount.toLocaleString()}</Text>
-        <Text format={{ fontName: fonts.interItalic }}>Feature #: </Text>
+        <Text format={{ fontName: fonts.interBold }}>Feature #: </Text>
         <Text newLine>{stats.feature.toLocaleString()}</Text>
-        <Text format={{ fontName: fonts.interItalic }}>Bug #: </Text>
+        <Text format={{ fontName: fonts.interBold }}>Bug #: </Text>
         <Text newLine>{stats.bug.toLocaleString()}</Text>
-        <Text format={{ fontName: fonts.interItalic }}>Chore #: </Text>
+        <Text format={{ fontName: fonts.interBold }}>Chore #: </Text>
         <Text newLine>{stats.chore.toLocaleString()}</Text>
-        <Text format={{ fontName: fonts.interItalic }}>Release #: </Text>
-        <Text>{stats.release.toLocaleString()}</Text>
+        <Text format={{ fontName: fonts.interBold }}>Release #: </Text>
+        <Text newLine>{stats.release.toLocaleString()}</Text>
+        {epic && (<Text format={{ fontName: fonts.interBold }}>Projected Completion: </Text>)}
+        {epic && (<Text>{dateFormat(new Date(epic.projected_completion))}</Text>)}
       </Text>
     </Sticky>
   );

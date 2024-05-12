@@ -1,5 +1,8 @@
 // declare type UserType = "SERVER" | "ANDROID" | "IOS" | "WEB" | "PRODUCT_QA" | "DEV_QA" | "DESIGN_QA"; // Does not work with JSON
 
+declare type SRecord<T> = Record<string, T>;
+declare type NRecord<T> = Record<number, T>;
+
 declare type PSSUser = {
   name: string,
   pivotal_id: number,
@@ -24,17 +27,5 @@ declare type PSSTeam = {
 
 declare type PSSPeriod = {
   startDate: string,
-  endDate: string,
-  t1: {
-    startDate: string,
-    endDate: string
-  },
-  t2: {
-    startDate: string,
-    endDate: string
-  },
-  t3: {
-    startDate: string,
-    endDate: string
-  }
+  endDate: string
 }

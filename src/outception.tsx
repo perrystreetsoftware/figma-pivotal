@@ -1,25 +1,22 @@
-import { lightFormat } from "date-fns/lightFormat";
 import PivotalSticky from "./pivotal/sticky";
 import PivotalStats from "./pivotal/stats";
 import GithubSticky from "./github/sticky";
 import GithubStats from "./github/stats";
 import { FrameToSection, SectionFrame } from "./components/frame";
-import { users, teams } from "./config/config";
 import CheckIn from "./byOwner/checkIn";
 import WeeklyUpdates from "./byOwner/weeklyUpdates";
+import { dateFormat } from "./date";
 
 const { figJamBaseLight, figJamBase } = figma.constants.colors;
-
-const dateFormat = (date: string): string => lightFormat(new Date(date), "yyyy/MM/dd");
 
 function mapSorted<T>(sortable: Record<string, T>, callback: (key: string, value: T) => FigmaDeclarativeChildren<FrameNode>): FigmaDeclarativeChildren<FrameNode>[] {
   return Object.keys(sortable).sort().map(key => callback(key, sortable[key]));
 }
 
 const title: {[command: string]: (parameters: ParameterValues) => string} = {
-  byEpic: ({pivotalEpicId, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpicId}" in Project "${teams[pivotalProject].name}"`,
-  byDate: ({pivotalProject, startDate, endDate}: ParameterValues) => `Outception for Project "${teams[pivotalProject].name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}`,
-  byOwner: ({owner, period: {startDate, endDate}}: ParameterValues) => `Outception for "${users[owner].name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}"`
+  byEpic: ({pivotalEpic, pivotalProject}: ParameterValues) => `Outception for Epic "${pivotalEpic.name}" in Project "${pivotalProject.name}"`,
+  byDate: ({pivotalProject, startDate, endDate}: ParameterValues) => `Outception for Project "${pivotalProject.name}" from ${dateFormat(new Date(startDate))} to ${dateFormat(new Date(endDate))}`,
+  byOwner: ({owner, period: {startDate, endDate}}: ParameterValues) => `Outception for "${owner.name}" from ${dateFormat(startDate)} to ${dateFormat(endDate)}"`
 }
 
 export default function outception(data: DataByMonthWeek, command: string, parameters: ParameterValues): SectionNode {
@@ -27,7 +24,7 @@ export default function outception(data: DataByMonthWeek, command: string, param
     <FrameToSection>
       <SectionFrame layoutMode="VERTICAL" separationMultiple={5} name={title[command](parameters)} color={figJamBaseLight.lightGray}>
         <SectionFrame layoutMode="HORIZONTAL" separationMultiple={3} name="Stats" noSection>
-          <PivotalStats storiesAndCommits={data} />
+          <PivotalStats storiesAndCommits={data} epic={parameters.pivotalEpic} />
           {(command === "byOwner") && <GithubStats storiesAndCommits={data} />}
         </SectionFrame>
 
