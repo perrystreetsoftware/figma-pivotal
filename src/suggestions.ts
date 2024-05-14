@@ -6,17 +6,13 @@ type Suggestion<T> = {
   data: T
 };
 
-function suggestionsFor<T>(objects: SRecord<T>): Suggestion<T>[] {
-  return Object.keys(objects).sort().map(object => ({name: object, data: objects[object]}));
-}
+const suggestionsFor = <T>(objects: SRecord<T>): Suggestion<T>[] => Object.keys(objects).sort().map(object => ({name: object, data: objects[object]}));
 
-function setSuggestion({query, result}: ParameterInputEvent, suggestions: Suggestion<T>[]) {
-  result.setSuggestions(suggestions.filter(({name}) => name.includes(query)));
-}
+const setSuggestion = <T>({query, result}: ParameterInputEvent, suggestions: Suggestion<T>[]) => result.setSuggestions(suggestions.filter(({name}) => name.includes(query)));
 
-const ownerSuggestions = suggestionsFor<PSSUser>(users),
-  projectSuggestions = suggestionsFor<PSSTeam>(teams),
-  periodSuggestions = suggestionsFor<PSSPeriod>(periods);
+const ownerSuggestions = suggestionsFor(users),
+  projectSuggestions = suggestionsFor(teams),
+  periodSuggestions = suggestionsFor(periods);
 
 export const suggestions: Record<string, (input: ParameterInputEvent) => void> = {
   owner(parameterInputEvent: ParameterInputEvent) {

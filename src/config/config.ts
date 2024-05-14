@@ -1,8 +1,8 @@
-import usersJson from "./users.json"; //  with { type: "json" };
-import teamsJson from "./teams.json"; // with { type: "json" };
-import periodsJson from "./periods.json"; // with { type: "json" };
+import usersJson from "./users.json"; // assert { type: "json" };
+import teamsJson from "./teams.json"; // assert { type: "json" };
+import periodsJson from "./periods.json"; // assert { type: "json" };
 
-const allUsers: {[user: string]: PSSAllUser} = usersJson
+const allUsers: Readonly<SRecord<PSSAllUser>> = usersJson
 
 export const users: Readonly<SRecord<PSSUser>> = Object.keys(allUsers)
   .filter((user) => "pivotal_id" in allUsers[user])

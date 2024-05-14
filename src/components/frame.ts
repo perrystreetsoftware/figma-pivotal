@@ -10,7 +10,9 @@ type SectionFrameProps = {
 };
 
 const isFrameNode = (node: SceneNode): node is FrameNode => node.type === "FRAME";
+
 const isStickyNode = (node: SceneNode): node is StickyNode => node.type === "STICKY";
+
 const isSceneNode = (node: unknown): node is SceneNode => typeof node === "object" && !!node!.type;
 
 function walkNodeTree(frame: FrameNode, section: SectionNode) {

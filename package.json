@@ -12,8 +12,8 @@
   "devDependencies": {
     "@figma/plugin-typings": "^1.87.0",
     "@figma/widget-typings": "^1.9.1",
-    "esbuild": "*",
-    "typescript": "*"
+    "esbuild": "^0.21.2",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "date-fns": "^3.3.1"
