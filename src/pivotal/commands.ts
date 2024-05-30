@@ -1,11 +1,19 @@
 import { fetchStoriesByEpic, fetchStoriesByFilter, fetchStoriesByPeriod } from "./fetch";
 import { teams } from "../config/config";
 
+function findLast<T>(arr: T[], pred: (el: T) => boolean): T | undefined {
+  if (typeof arr.findLast === 'function') return arr.findLast(pred);
+
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (pred(arr[i])) return arr[i];
+  }
+}
+
 export async function byEpic(pivotalToken: string, pivotalEpic: PivotalEpic): Promise<Data> {
   const stories = await fetchStoriesByEpic(pivotalToken, pivotalEpic);
 
-  pivotalEpic.completed_at ||= pivotalEpic.projected_completion || stories.findLast(({accepted_at}) => accepted_at)?.accepted_at;
-  const dateRange = `${stories[0].accepted_at}..${pivotalEpic.completed_at}`
+  pivotalEpic.completed_at ||= pivotalEpic.projected_completion || findLast(stories, ({accepted_at}) => accepted_at !== undefined)!.accepted_at;
+  const dateRange = `${stories[0].accepted_at}..${pivotalEpic.completed_at}`;
   const filter = `-epic:"${pivotalEpic.label.name}" AND accepted:${dateRange}`;
   const otherStories = await fetchStoriesByFilter(pivotalToken, pivotalEpic.project_id, filter);
 
