@@ -52,7 +52,7 @@ export default function PivotalStats({ storiesAndCommits, epic }: PivotalStatsPr
         <Text format={{ fontName: fonts.interBold }}>Release #: </Text>
         <Text newLine>{stats.release.toLocaleString()}</Text>
         {epic && (<Text format={{ fontName: fonts.interBold }}>Projected Completion: </Text>)}
-        {epic && (<Text>{dateFormat(new Date(epic.projected_completion))}</Text>)}
+        {epic && (<Text>{dateFormat(new Date(epic.completed_at!))}</Text>)}
       </Text>
     </Sticky>
   );

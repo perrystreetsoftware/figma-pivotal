@@ -44,6 +44,7 @@ declare type PivotalEpic = {
   name: string,
   url: string,
   project_id: number,
-  projected_completion: string,
+  projected_completion?: string,
+  completed_at?: string,
   label: PivotalLabel
 }

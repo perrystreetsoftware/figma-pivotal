@@ -3,7 +3,9 @@ import { teams } from "../config/config";
 
 export async function byEpic(pivotalToken: string, pivotalEpic: PivotalEpic): Promise<Data> {
   const stories = await fetchStoriesByEpic(pivotalToken, pivotalEpic);
-  const dateRange = `${stories[0].accepted_at}..${pivotalEpic.projected_completion}`
+
+  pivotalEpic.completed_at ||= pivotalEpic.projected_completion || stories.findLast(({accepted_at}) => accepted_at)?.accepted_at;
+  const dateRange = `${stories[0].accepted_at}..${pivotalEpic.completed_at}`
   const filter = `-epic:"${pivotalEpic.label.name}" AND accepted:${dateRange}`;
   const otherStories = await fetchStoriesByFilter(pivotalToken, pivotalEpic.project_id, filter);
 

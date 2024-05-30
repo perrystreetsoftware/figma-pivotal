@@ -23,7 +23,7 @@ type Response<T> = {
 
 const storyFields = "name,url,accepted_at,estimate,project_id,owner_ids,story_type,labels(name),cycle_time_details(:default),reviews(reviewer_id,status)";
 
-const epicFields = "name,url,project_id,completed_at,projected_completion,label(id,name)";
+const epicFields = "name,url,project_id,completed_at,projected_completion,completed_at,label(id,name)";
 
 const paramsToString = (params: Param) => Object.keys(params).map((key: string) => `${key}=${encodeURI(params[key].toString())}`).join("&");
 
