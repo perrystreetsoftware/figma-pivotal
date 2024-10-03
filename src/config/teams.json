@@ -5,6 +5,18 @@
     "pivotal_project_id": 2564753,
     "repos": ["bkdr"]
   },
+  "client_tech": {
+    "name": "Client Tech",
+    "slack_channel": "C5XGEKN3S",
+    "pivotal_project_id": 2610445,
+    "repos": ["Husband-Droid", "Husband"]
+  },
+  "mochi": {
+    "name": "Mochi",
+    "slack_channel": "C071GK55LR1",
+    "pivotal_project_id": 2608716,
+    "repos": ["Husband-Redis", "Husband-Droid", "Husband"]
+  },
   "ops": {
     "name": "Dev Ops",
     "slack_channel": "C013G33RDPA",
@@ -29,23 +41,17 @@
     "pivotal_project_id": 2484491,
     "repos": ["Husband-Redis", "Husband-Droid", "Husband"]
   },
-  "spectrum": {
-    "name": "Spectrum",
-    "slack_channel": "C0506C09K9D",
-    "pivotal_project_id": 2636024,
-    "repos": ["Husband-Redis", "Husband-Droid", "Husband"]
-  },
-  "client_tech": {
-    "name": "Client Tech",
-    "slack_channel": "C5XGEKN3S",
-    "pivotal_project_id": 2610445,
-    "repos": ["Husband-Droid", "Husband"]
-  },
   "server_tech": {
     "name": "Server Tech",
     "slack_channel": "C02GP6B29K2",
     "pivotal_project_id": 2608716,
     "repos": ["Husband-Redis"]
+  },
+  "spectrum": {
+    "name": "Spectrum",
+    "slack_channel": "C0506C09K9D",
+    "pivotal_project_id": 2636024,
+    "repos": ["Husband-Redis", "Husband-Droid", "Husband"]
   },
   "user": {
     "name": "User",

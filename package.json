@@ -1,5 +1,5 @@
 {
-  "name": "Figma-Pivotal",
+  "name": "figma-pivotal",
   "version": "1.0.0",
   "description": "Figma plugin to integrate with Pivotal Tracker",
   "scripts": {
@@ -10,12 +10,12 @@
   "author": "",
   "license": "",
   "devDependencies": {
-    "@figma/plugin-typings": "^1.87.0",
-    "@figma/widget-typings": "^1.9.1",
-    "esbuild": "^0.21.2",
-    "typescript": "^5.4.5"
+    "@figma/plugin-typings": "^1.100.2",
+    "@figma/widget-typings": "^1.9.2",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.2"
   },
   "dependencies": {
-    "date-fns": "^3.3.1"
+    "date-fns": "^4.1.0"
   }
 }
